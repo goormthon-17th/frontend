@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
+import { MobileContainer } from '@/components/shared/MobileLayout';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,11 +27,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        <Script
-          src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID}`}
-          strategy="beforeInteractive"
-        />
-        {children}
+        <MobileContainer>
+          <Script
+            src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID}`}
+            strategy="beforeInteractive"
+          />
+          {children}
+        </MobileContainer>
       </body>
     </html>
   );
