@@ -94,3 +94,43 @@ export const usePostReview = (recipeId: number) => {
     },
   });
 };
+
+// 구독 기능
+
+const toggleSubscribe = (userId: number) =>
+  axios
+    .post(
+      `${BASE}/api/users/${userId}/subscribe`,
+      {},
+      { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } },
+    )
+    .then((r) => r.data);
+
+export const useToggleSubscribe = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (userId: number) => toggleSubscribe(userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['following'] });
+    },
+  });
+};
+
+// 유저 프로필
+
+type UserProfile = {
+  ok: boolean;
+  user_id: number;
+  nickname: string;
+  profile_image_url: string | null;
+  recipe_count: number;
+  recipe_likes_total: number;
+  following_count: number;
+  is_subscribed: boolean;
+};
+
+const getUserProfile = (userId: number) =>
+  axios.get(`${BASE}/api/users/${userId}`).then((r) => r.data as UserProfile);
+
+export const useUserProfile = (userId: number) =>
+  useQuery({ queryKey: ['user', userId], queryFn: () => getUserProfile(userId) });

@@ -1,11 +1,10 @@
 'use client';
 
-import { useRecipesByUser } from '@/app/api/junior/useJunior';
+import { useRecipesByUser, useToggleSubscribe, useUserProfile } from '@/app/api/junior/useJunior';
 import Header from '@/components/junior/Header';
 import NavBar from '@/components/junior/NavBar';
 import RecipeCard from '@/components/junior/RecipeCard';
 import RecipeCardSkeleton from '@/components/junior/RecipeCardSkeleton';
-import MobileHeader from '@/components/shared/MobileHeader';
 import { PROFILE_IMAGES } from '@/constants/text';
 import { useRandomProfile } from '@/hooks/useRandomProfile';
 import { VStack } from '@vapor-ui/core';
@@ -15,10 +14,23 @@ import { useState } from 'react';
 const JuniorListClient = () => {
   const router = useRouter();
   const { id } = useParams();
-  const [bookmarkedIds, setBookmarkedIds] = useState<Set<number>>(new Set());
+  const userId = Number(id);
 
-  const { data: recipes, isLoading, error } = useRecipesByUser(Number(id));
+  const [bookmarkedIds, setBookmarkedIds] = useState<Set<number>>(new Set());
+  const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
   const randomProfile = useRandomProfile(PROFILE_IMAGES);
+
+  const { data: userProfile } = useUserProfile(userId);
+  const { data: recipes, isLoading, error } = useRecipesByUser(userId);
+  const { mutate: toggleSubscribe } = useToggleSubscribe();
+
+  const subscribed = isSubscribed ?? userProfile?.is_subscribed ?? false;
+
+  const handleSubscribe = () => {
+    toggleSubscribe(userId, {
+      onSuccess: (data) => setIsSubscribed(data.subscribed),
+    });
+  };
 
   const toggleBookmark = (id: number) => {
     setBookmarkedIds((prev) => {
@@ -28,18 +40,17 @@ const JuniorListClient = () => {
     });
   };
 
-  const userInfo = recipes?.[0];
-
   return (
     <VStack style={{ gap: '16px', alignItems: 'center' }}>
-      <MobileHeader onBack={() => router.back()} onMenu={() => console.log('메뉴 클릭')} />
       <Header
-        profile={userInfo?.profile_image_url ?? randomProfile}
-        title={userInfo?.nickname ?? ''}
-        recipe={userInfo?.recipe_count ?? 0}
-        like={userInfo?.recipe_likes_total ?? 0}
-        subscribe={userInfo?.following_count ?? 0}
+        profile={userProfile?.profile_image_url ?? randomProfile}
+        title={userProfile?.nickname ?? ''}
+        recipe={userProfile?.recipe_count ?? 0}
+        like={userProfile?.recipe_likes_total ?? 0}
+        subscribe={userProfile?.following_count ?? 0}
         isLoading={isLoading}
+        isSubscribed={subscribed}
+        onSubscribe={handleSubscribe}
       />
       <div
         style={{

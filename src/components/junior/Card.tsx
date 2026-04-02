@@ -5,9 +5,9 @@ interface CardProps {
   image: string;
   profile: string;
   title: string;
-  recipeName: string;
-  date: string;
-  like: number;
+  recipeName?: string;
+  date?: string;
+  like?: number;
   onCardClick: () => void;
   onProfileClick: () => void;
 }
@@ -35,7 +35,7 @@ const Card = ({
       }}
     >
       <div style={{ position: 'relative', width: '100%', height: '180px' }}>
-        <Image src={image} alt={recipeName} fill style={{ objectFit: 'cover' }} />
+        <Image src={image} alt="이미지" fill style={{ objectFit: 'cover' }} />
 
         <div
           style={{
