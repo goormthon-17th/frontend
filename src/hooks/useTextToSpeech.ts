@@ -34,7 +34,11 @@ export function useTextToSpeech({
       stop();
 
       try {
-        const response = await axios.post('/api/tts', { text, voice }, { responseType: 'blob' });
+        const response = await axios.post(
+          '/api/internal/tts',
+          { text, voice },
+          { responseType: 'blob' },
+        );
         const blob: Blob = response.data;
         const url = URL.createObjectURL(blob);
         const audio = new Audio(url);

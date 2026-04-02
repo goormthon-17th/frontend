@@ -16,7 +16,7 @@ const CookCard = ({ audioUrl, resultText }: CookCardProps) => {
   useEffect(() => {
     if (!resultText) return;
     axios
-      .post('/api/tts', { text: resultText }, { responseType: 'blob' })
+      .post('/api/internal/tts', { text: resultText }, { responseType: 'blob' })
       .then((res) => setTtsUrl(URL.createObjectURL(res.data)));
   }, [resultText]);
 

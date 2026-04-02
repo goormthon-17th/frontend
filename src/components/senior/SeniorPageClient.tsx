@@ -111,7 +111,7 @@ const SeniorPageClient = () => {
             setStep('record-complete');
           }}
         />
-        <Image src="/icons/illust_add_pic.svg" alt="add picture" width={240} height={240} />
+        <Image src="/icons/Illust_add_pic.svg" alt="add picture" width={240} height={240} />
       </SeniorStepLayout>
     );
   }
