@@ -54,9 +54,26 @@ const JuniorRecipeClient = () => {
 
   return (
     <VStack
-      style={{ backgroundColor: 'var(--color-white)', minHeight: '100vh', paddingBottom: '150px' }}
+      style={{
+        backgroundColor: 'var(--color-white)',
+        minHeight: '100vh',
+        paddingBottom: '150px',
+        position: 'relative',
+      }}
     >
-      <MobileHeader onBack={() => router.back()} onMenu={() => console.log('메뉴 클릭')} />
+      <Image
+        src="/icons/menu.svg"
+        alt="메뉴"
+        width={24}
+        height={24}
+        style={{
+          position: 'absolute',
+          right: '20px',
+          zIndex: 3,
+          top: '10px',
+        }}
+      />
+      <MobileHeader onBack={() => router.back()} />
       <div
         style={{
           position: 'relative',

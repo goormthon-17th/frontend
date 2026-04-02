@@ -5,11 +5,11 @@ import Banner from '@/components/junior/Banner';
 import Card from '@/components/junior/Card';
 import CardSkeleton from '@/components/junior/CardSkeleton';
 import NavBar from '@/components/junior/NavBar';
-import MobileHeader from '@/components/shared/MobileHeader';
 import SearchInput from '@/components/shared/SearchInput';
 import { BANNER_TEXT, PROFILE_IMAGES } from '@/constants/text';
 import { useRandomProfile } from '@/hooks/useRandomProfile';
 import { Select, VStack } from '@vapor-ui/core';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -26,8 +26,19 @@ const JuniorPage = () => {
   console.log(recipes);
 
   return (
-    <VStack style={{ gap: '16px', alignItems: 'center' }}>
-      <MobileHeader onMenu={() => console.log('메뉴 클릭')} />
+    <VStack style={{ position: 'relative', gap: '16px', alignItems: 'center' }}>
+      <Image
+        src="/icons/menu.svg"
+        alt="메뉴"
+        width={24}
+        height={24}
+        style={{
+          position: 'absolute',
+          right: '20px',
+          zIndex: 3,
+          top: '10px',
+        }}
+      />
       <div
         style={{
           display: 'flex',
