@@ -36,7 +36,7 @@ const CookCard = ({ audioUrl, resultText }: CookCardProps) => {
           <Text typography="body1">{new Date().toLocaleDateString('ko-KR')}</Text>
         </HStack>
       </Card.Header>
-      <Card.Body $css={{ padding: 0, borderBottom: 'none', height: '329px' }}>
+      <Card.Body $css={{ padding: 0, borderBottom: 'none', height: '329px', overflowY: 'auto' }}>
         <Text typography="body2" style={{ whiteSpace: 'pre-wrap' }}>
           {resultText ?? ''}
         </Text>
