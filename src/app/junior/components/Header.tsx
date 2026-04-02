@@ -28,6 +28,7 @@ const Header = ({ profile, title, recipe, like, subscribe }: HeaderProps) => {
           alignItems: 'center',
           gap: '16px',
           paddingTop: '78px',
+          padding: '78px 20px 0 20px',
         }}
       >
         <Image
@@ -56,6 +57,12 @@ const Header = ({ profile, title, recipe, like, subscribe }: HeaderProps) => {
             backgroundColor: 'var(--color-gray-50)',
             borderRadius: '8px',
             padding: '8px 26px',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignContent: 'center',
+            textAlign: 'center',
+            justifyContent: 'center',
           }}
         >
           <HStack style={{ alignItems: 'center', gap: '6px' }}>

@@ -69,22 +69,29 @@ const junior = () => {
   };
 
   return (
-    <div style={{ position: 'relative' }}>
-      <VStack
+    <VStack
+      style={{
+        gap: '16px',
+        alignItems: 'center',
+      }}
+    >
+      <Header
+        profile={userData.profile}
+        title={userData.title}
+        recipe={userData.recipe}
+        like={userData.like}
+        subscribe={userData.subscribe}
+      />
+      <div
         style={{
-          position: 'relative',
-          gap: '16px',
-          alignItems: 'center',
           padding: '0 20px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+          width: '100%',
+          marginBottom: '140px',
         }}
       >
-        <Header
-          profile={userData.profile}
-          title={userData.title}
-          recipe={userData.recipe}
-          like={userData.like}
-          subscribe={userData.subscribe}
-        />
         {userData.recipes.map((recipe) => (
           <RecipeCard
             key={recipe.id}
@@ -95,24 +102,25 @@ const junior = () => {
             description={recipe.description}
           />
         ))}
-        <Button
-          style={{
-            fontSize: '16px',
-            fontWeight: 'bold',
-            backgroundColor: 'var(--color-mandolong-500)',
-            borderRadius: '30px',
-            padding: '24px',
-            width: '168px',
-            height: '48px',
-            position: 'fixed',
-            bottom: '80px',
-          }}
-        >
-          구독하기
-        </Button>
-        <NavBar />
-      </VStack>
-    </div>
+      </div>
+      <Button
+        style={{
+          fontSize: '16px',
+          fontWeight: 'bold',
+          backgroundColor: 'var(--color-mandolong-500)',
+          borderRadius: '30px',
+          padding: '24px',
+          width: '168px',
+          height: '48px',
+          position: 'fixed',
+          bottom: '80px',
+          zIndex: '10',
+        }}
+      >
+        구독하기
+      </Button>
+      <NavBar />
+    </VStack>
   );
 };
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useInnerSize } from '@/utils/useInnerSize';
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, ReactNode, useContext } from 'react';
 import { useMeasure } from 'react-use';
 
 export const ScreenContext = createContext<number>(480);
@@ -24,6 +24,8 @@ export const MobileContainer = ({ children }: { children: ReactNode }) => {
           marginRight: 'auto',
           minHeight: innerHeight > 0 ? innerHeight : '100vh',
           backgroundColor: 'white',
+          borderLeft: '1px solid var(--color-profile-bg)',
+          borderRight: '1px solid var(--color-profile-bg)',
         }}
       >
         {children}
