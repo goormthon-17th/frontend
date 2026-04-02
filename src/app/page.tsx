@@ -1,11 +1,11 @@
 'use client';
 
-import NaverMap from '@/components/junior/NaverMap';
+import Login from '@/components/login/Login';
 
 export default function Home() {
   return (
     <div>
-      <NaverMap />
+      <Login />
     </div>
   );
 }
