@@ -2,8 +2,7 @@
 
 import SeniorStepLayout from '@/components/senior/SeniorStepLayout';
 import WaveformVisualizer from '@/components/senior/WaveformVisualizer';
-import { useGenerateRecipe } from '@/api/senior/useGenerateRecipe';
-import { MOCK_TEXT } from '@/api/senior/generateRecipeApi';
+import { uploadVoice } from '@/api/senior/uploadVoiceApi';
 import { useSpeechToText } from '@/hooks/useSpeechToText';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -17,8 +16,7 @@ const SeniorPageClient = () => {
   const [step, setStep] = useState<SeniorStep>('intro');
   const { start, stop, audioUrl, transcript, stream } = useSpeechToText({ lang: 'ko-KR' });
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const { mutate: generateRecipe, isPending } = useGenerateRecipe();
+  const [isPending, setIsPending] = useState(false);
 
   if (step === 'intro') {
     return (
@@ -142,9 +140,7 @@ const SeniorPageClient = () => {
           type="file"
           accept="image/*"
           style={{ display: 'none' }}
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) setImageUrl(URL.createObjectURL(file));
+          onChange={() => {
             setStep('record-complete');
           }}
         />
@@ -168,21 +164,20 @@ const SeniorPageClient = () => {
         dimText={'비법노트 제작중...'}
         button={{
           label: '확인',
-          onClick: () => {
-            if (audioUrl) sessionStorage.setItem('recordedAudioUrl', audioUrl);
-            console.log(imageUrl);
-            generateRecipe(
-              {
-                text: transcript || MOCK_TEXT,
-              },
-              {
-                onSuccess: (data) => {
-                  sessionStorage.setItem('recipeResult', data.resultText ?? '');
-                  sessionStorage.setItem('rawTranscript', transcript);
-                  router.push('/senior/cook');
-                },
-              },
-            );
+          onClick: async () => {
+            if (!audioUrl) return;
+            setIsPending(true);
+            try {
+              const [data] = await Promise.all([
+                uploadVoice(audioUrl),
+                new Promise((resolve) => setTimeout(resolve, 3000)),
+              ]);
+              sessionStorage.setItem('recipeResult', data.text ?? '');
+              sessionStorage.setItem('rawTranscript', transcript);
+              router.push('/senior/cook');
+            } finally {
+              setIsPending(false);
+            }
           },
         }}
       >

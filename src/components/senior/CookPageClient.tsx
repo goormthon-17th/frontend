@@ -63,12 +63,15 @@ const CookPageClient = () => {
           color: 'white',
         }}
         onClick={() =>
-          registerRecipe({
-            raw_text: rawTranscript,
-            refined_text: recipeResult ?? '',
-            audio_url: audioUrl ?? '',
-            image_url: audioUrl ?? '123',
-          })
+          registerRecipe(
+            {
+              raw_text: rawTranscript,
+              refined_text: recipeResult ?? '',
+              audio_url: audioUrl ?? '',
+              image_url: audioUrl ?? '123',
+            },
+            { onSuccess: () => router.push('/junior') },
+          )
         }
       >
         {isPending ? '전송 중...' : '비법노트 전수하기'}
