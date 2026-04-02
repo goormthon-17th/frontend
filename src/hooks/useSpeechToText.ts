@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useRef, useState } from 'react';
+import { correctJejuDialect, JEJU_BOOSTINGS } from '@/lib/jejuDialect';
 
 interface UseSpeechToTextOptions {
   lang?: 'ko-KR' | 'ja' | 'en-US' | 'zh-CN';
@@ -68,13 +69,22 @@ export function useSpeechToText({
 
   const sendToClova = async (audioBlob: Blob) => {
     try {
-      const params = { language: lang, completion: 'sync' };
+      const invokeUrl = process.env.NEXT_PUBLIC_CLOVA_INVOKE_URL;
+      const secretKey = process.env.NEXT_PUBLIC_CLOVA_SECRET_KEY;
+
+      const params = {
+        language: lang,
+        completion: 'sync',
+        boostings: JEJU_BOOSTINGS.map((word) => ({ word })),
+      };
       const formData = new FormData();
       formData.append('media', audioBlob, 'recording.webm');
       formData.append('params', JSON.stringify(params));
 
-      const { data } = await axios.post('/api/internal/stt', formData);
-      const text: string = data.text ?? '';
+      const { data } = await axios.post(`${invokeUrl}/recognizer/upload`, formData, {
+        headers: { 'X-CLOVASPEECH-API-KEY': secretKey },
+      });
+      const text: string = correctJejuDialect(data.text ?? '');
       setTranscript(text);
       localStorage.setItem('stt_transcript', text);
       onResult?.(text);
