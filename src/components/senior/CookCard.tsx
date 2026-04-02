@@ -22,7 +22,7 @@ const CookCard = ({ audioUrl, resultText }: CookCardProps) => {
             paddingBottom: '16px',
           }}
         >
-          <Text typography="heading3">톳밥</Text>
+          <Text typography="heading3">고사리 해장국</Text>
           <Text typography="body1">{new Date().toLocaleDateString('ko-KR')}</Text>
         </HStack>
       </Card.Header>
