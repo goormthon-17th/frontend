@@ -8,6 +8,7 @@ interface RecipeCardProps {
   like: number;
   description: string;
   isLiked?: boolean;
+  onCardClick?: () => void;
 }
 
 const RecipeCard = ({
@@ -17,9 +18,11 @@ const RecipeCard = ({
   like,
   description,
   isLiked = false,
+  onCardClick,
 }: RecipeCardProps) => {
   return (
     <VStack
+      onClick={onCardClick}
       style={{
         borderRadius: '16px',
         overflow: 'hidden',

@@ -1,72 +1,54 @@
-import { Button, VStack } from '@vapor-ui/core';
-import Header from './components/Header';
-import NavBar from './components/NavBar';
-import RecipeCard from './components/RecipeCard';
+'use client';
 
-const junior = () => {
-  const userData = {
+import MobileHeader from '@/components/shared/MobileHeader';
+import SearchInput from '@/components/shared/SearchInput';
+import { Select, VStack } from '@vapor-ui/core';
+import { useRouter } from 'next/navigation';
+import Banner from './components/Banner';
+import Card from './components/Card';
+import NavBar from './components/NavBar';
+
+const userData = [
+  {
+    id: 1,
+    image: '/card.png',
     profile: '/',
     title: '제주 손맛을 담은 정 많은 할머니',
-    recipe: 6,
-    like: 10,
-    subscribe: 10,
-    recipes: [
-      {
-        id: 1,
-        image: '/card.png',
-        title: '된장찌개',
-        date: '2026.04.01',
-        like: 16,
-        description:
-          '제주 된장으로 끓인 구수한 된장찌개 레시피입니다. 제주 된장으로 끓인 구수한 된장찌개 레시피입니다.',
-      },
-      {
-        id: 2,
-        image: '/card.png',
-        title: '갈치조림',
-        date: '2026.03.28',
-        like: 24,
-        description:
-          '제주 은갈치로 만든 칼칼한 갈치조림 레시피입니다. 제주 은갈치로 만든 칼칼한 갈치조림 레시피입니다.',
-      },
-      {
-        id: 3,
-        image: '/card.png',
-        title: '고사리육개장',
-        date: '2026.03.20',
-        like: 31,
-        description:
-          '제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다. 제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다.',
-      },
-      {
-        id: 4,
-        image: '/card.png',
-        title: '고사리육개장',
-        date: '2026.03.20',
-        like: 31,
-        description:
-          '제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다. 제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다.',
-      },
-      {
-        id: 5,
-        image: '/card.png',
-        title: '고사리육개장',
-        date: '2026.03.20',
-        like: 31,
-        description:
-          '제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다. 제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다.',
-      },
-      {
-        id: 6,
-        image: '/card.png',
-        title: '고사리육개장',
-        date: '2026.03.20',
-        like: 31,
-        description:
-          '제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다. 제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다.',
-      },
-    ],
-  };
+    recipeName: '몸국',
+    date: '3일 전',
+    like: 16,
+  },
+  {
+    id: 2,
+    image: '/card.png',
+    profile: '/',
+    title: '30년 경력 제주 토박이 아주머니',
+    recipeName: '고사리육개장',
+    date: '1일 전',
+    like: 32,
+  },
+  {
+    id: 3,
+    image: '/card.png',
+    profile: '/',
+    title: '손녀에게 레시피를 물려주고 싶은 할머니',
+    recipeName: '옥돔구이',
+    date: '5일 전',
+    like: 8,
+  },
+  {
+    id: 4,
+    image: '/card.png',
+    profile: '/',
+    title: '제주 향토 음식 연구가',
+    recipeName: '빙떡',
+    date: '2시간 전',
+    like: 24,
+  },
+];
+
+const JuniorPage = () => {
+  const router = useRouter();
 
   return (
     <VStack
@@ -75,16 +57,9 @@ const junior = () => {
         alignItems: 'center',
       }}
     >
-      <Header
-        profile={userData.profile}
-        title={userData.title}
-        recipe={userData.recipe}
-        like={userData.like}
-        subscribe={userData.subscribe}
-      />
+      <MobileHeader onMenu={() => console.log('메뉴 클릭')} />
       <div
         style={{
-          padding: '0 20px',
           display: 'flex',
           flexDirection: 'column',
           gap: '16px',
@@ -92,36 +67,45 @@ const junior = () => {
           marginBottom: '140px',
         }}
       >
-        {userData.recipes.map((recipe) => (
-          <RecipeCard
-            key={recipe.id}
-            image={recipe.image}
-            title={recipe.title}
-            date={recipe.date}
-            like={recipe.like}
-            description={recipe.description}
-          />
-        ))}
+        <Banner title={`또똣한 몸국\n어떠세요`}>
+          <SearchInput />
+        </Banner>
+
+        <VStack
+          style={{
+            gap: '16px',
+            alignItems: 'center',
+            padding: '0 20px',
+            width: '100%',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+            <Select.Root placeholder="좋아요순">
+              <Select.Trigger />
+              <Select.Popup positionerElement={<Select.PositionerPrimitive side="bottom" />}>
+                <Select.Item value="option1">인기순</Select.Item>
+              </Select.Popup>
+            </Select.Root>
+          </div>
+
+          {userData.map((user) => (
+            <Card
+              key={user.id}
+              image={user.image}
+              profile={user.profile}
+              title={user.title}
+              recipeName={user.recipeName}
+              date={user.date}
+              like={user.like}
+              onCardClick={() => router.push(`/junior/recipe/${user.id}`)}
+              onProfileClick={() => router.push('/junior/list')}
+            />
+          ))}
+        </VStack>
       </div>
-      <Button
-        style={{
-          fontSize: '16px',
-          fontWeight: 'bold',
-          backgroundColor: 'var(--color-mandolong-500)',
-          borderRadius: '30px',
-          padding: '24px',
-          width: '168px',
-          height: '48px',
-          position: 'fixed',
-          bottom: '80px',
-          zIndex: '10',
-        }}
-      >
-        구독하기
-      </Button>
       <NavBar />
     </VStack>
   );
 };
 
-export default junior;
+export default JuniorPage;

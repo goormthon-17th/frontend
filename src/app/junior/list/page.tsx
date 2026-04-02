@@ -1,9 +1,14 @@
+'use client';
+
+import MobileHeader from '@/components/shared/MobileHeader';
 import { Button, VStack } from '@vapor-ui/core';
+import { useRouter } from 'next/navigation';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
 import RecipeCard from '../components/RecipeCard';
 
-const junior = () => {
+const JuniorListPage = () => {
+  const router = useRouter();
   const userData = {
     profile: '/',
     title: '제주 손맛을 담은 정 많은 할머니',
@@ -75,6 +80,7 @@ const junior = () => {
         alignItems: 'center',
       }}
     >
+      <MobileHeader onBack={() => router.back()} onMenu={() => console.log('메뉴 클릭')} />
       <Header
         profile={userData.profile}
         title={userData.title}
@@ -100,6 +106,7 @@ const junior = () => {
             date={recipe.date}
             like={recipe.like}
             description={recipe.description}
+            onCardClick={() => router.push(`/junior/recipe/${recipe.id}`)}
           />
         ))}
       </div>
@@ -113,7 +120,7 @@ const junior = () => {
           width: '168px',
           height: '48px',
           position: 'fixed',
-          bottom: '80px',
+          bottom: '76px',
           zIndex: '10',
         }}
       >
@@ -124,4 +131,4 @@ const junior = () => {
   );
 };
 
-export default junior;
+export default JuniorListPage;
