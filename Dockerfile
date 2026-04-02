@@ -4,14 +4,17 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 FROM base AS deps
+RUN npm install -g pnpm@9.15.9
 COPY package.json pnpm-lock.yaml ./
-RUN corepack enable pnpm && pnpm install --frozen-lockfile
+# frozen 실패 시: 원격 package.json(예: axios 1.13.6)과 lock(^1.14.0) 불일치. 락을 런타임에 맞춤.
+RUN pnpm install --no-frozen-lockfile
 
 FROM base AS builder
+RUN npm install -g pnpm@9.15.9
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN corepack enable pnpm && pnpm run build
+RUN pnpm run build
 
 FROM base AS runner
 WORKDIR /app
