@@ -8,7 +8,7 @@ interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
   ({ placeholder = '검색어를 입력하세요', className, ...props }, ref) => {
     return (
-      <div style={{ position: 'relative', width: '100%', height: '50px' }}>
+      <div style={{ position: 'relative', width: '100%', height: '48px' }}>
         <Image
           src="/icons/search.svg"
           alt="검색"
@@ -30,10 +30,10 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             boxSizing: 'border-box',
             border: '1px solid transparent',
             padding: '10px 40px 10px 20px',
-            borderRadius: '10px',
-            backgroundColor: '#fafafa',
+            borderRadius: '8px',
+            backgroundColor: 'var(--color-white)',
             fontSize: '18px',
-            color: '#555555',
+            color: 'var(--color-black)',
             width: '100%',
             height: '100%',
           }}
