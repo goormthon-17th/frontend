@@ -1,31 +1,15 @@
 'use client';
 
-import { useMutation } from '@tanstack/react-query';
 import { Button, Field, Form, TextInput, VStack } from '@vapor-ui/core';
-import axios from 'axios';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useLogin } from '@/api/login/useLogin';
 
 const Login = () => {
-  const router = useRouter();
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
 
-  const {
-    mutate: login,
-    isPending,
-    error,
-  } = useMutation({
-    mutationFn: (data: { loginId: string; password: string }) =>
-      axios
-        .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, data)
-        .then((res) => res.data),
-    onSuccess: (data) => {
-      localStorage.setItem('token', data.token);
-      router.push('/senior');
-    },
-  });
+  const { mutate: login, isPending, error } = useLogin();
 
   return (
     <VStack
