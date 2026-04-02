@@ -11,7 +11,7 @@ const Banner = ({ title, children }: BannerProps) => {
   return (
     <VStack
       style={{
-        backgroundColor: 'var(--color-mandolong-500)',
+        backgroundColor: 'var(--color-mandolong-600)',
         borderRadius: '0',
         padding: '60px 20px 26px 20px',
         width: '100%',
