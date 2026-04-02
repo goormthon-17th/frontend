@@ -39,12 +39,25 @@ const SeniorStepLayout = ({
         alignItems: 'center',
       }}
     >
+      <Text
+        style={{
+          position: 'absolute',
+          top: '16px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          fontSize: '16px',
+          fontWeight: '500',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        새 비법노트 녹음
+      </Text>
       {onBack && (
         <Button
           onClick={onBack}
           style={{
             position: 'absolute',
-            top: '20px',
+            top: '16px',
             left: '20px',
             background: 'none',
             border: 'none',
@@ -128,6 +141,7 @@ const SeniorStepLayout = ({
         </Button>
       )}
 
+      <NavBar />
       {dim && (
         <div
           style={{
@@ -135,15 +149,17 @@ const SeniorStepLayout = ({
             inset: 0,
             backgroundColor: 'var(--color-dim)',
             display: 'flex',
+            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
+            zIndex: 9999,
           }}
         >
           <Image src="/icons/illust_ai.svg" alt="ai" width={195} height={195} />
           <Text
             style={{
               fontFamily: 'YPairing',
-              fontSize: '28px',
+              fontSize: '24px',
               fontWeight: '400',
               lineHeight: '48px',
               color: 'white',
@@ -155,7 +171,6 @@ const SeniorStepLayout = ({
           </Text>
         </div>
       )}
-      <NavBar />
     </div>
   );
 };
