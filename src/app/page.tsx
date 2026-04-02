@@ -1,14 +1,10 @@
 'use client';
 
-import NaverMap from '@/components/senior/NaverMap';
-import { TextToSpeech } from '@/components/junior/TextToSpeech';
-import { VoiceInput } from '@/components/junior/VoiceInput';
+import NaverMap from '@/components/junior/NaverMap';
 
 export default function Home() {
   return (
     <div>
-      <VoiceInput />
-      <TextToSpeech />
       <NaverMap />
     </div>
   );
