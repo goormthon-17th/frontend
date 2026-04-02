@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
   let response: Response | null = null;
   for (let attempt = 0; attempt < 3; attempt++) {
     response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-tts:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`,
       { method: 'POST', headers: { 'Content-Type': 'application/json' }, body },
     );
     if (response.ok) break;

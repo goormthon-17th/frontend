@@ -2,6 +2,8 @@
 
 import SeniorStepLayout from '@/components/senior/SeniorStepLayout';
 import WaveformVisualizer from '@/components/senior/WaveformVisualizer';
+import { useGenerateRecipe } from '@/api/senior/useGenerateRecipe';
+import { MOCK_TEXT } from '@/api/senior/generateRecipeApi';
 import { useSpeechToText } from '@/hooks/useSpeechToText';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -12,9 +14,10 @@ type SeniorStep = 'intro' | 'recording' | 'picture' | 'record-complete';
 const SeniorPageClient = () => {
   const router = useRouter();
   const [step, setStep] = useState<SeniorStep>('intro');
-  const { start, stop, audioUrl, stream } = useSpeechToText({ lang: 'ko-KR' });
+  const { start, stop, audioUrl, transcript, stream } = useSpeechToText({ lang: 'ko-KR' });
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isDimmed, setIsDimmed] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const { mutate: generateRecipe, isPending } = useGenerateRecipe();
 
   if (step === 'intro') {
     return (
@@ -102,7 +105,11 @@ const SeniorPageClient = () => {
           type="file"
           accept="image/*"
           style={{ display: 'none' }}
-          onChange={() => setStep('record-complete')}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) setImageUrl(URL.createObjectURL(file));
+            setStep('record-complete');
+          }}
         />
         <Image src="/icons/illust_add_pic.svg" alt="add picture" width={240} height={240} />
       </SeniorStepLayout>
@@ -120,14 +127,25 @@ const SeniorPageClient = () => {
             확인해 볼까예?
           </>
         }
-        dim={isDimmed}
+        dim={isPending}
         dimText={'비법노트\n제작중...'}
         button={{
           label: '확인',
           onClick: () => {
             if (audioUrl) sessionStorage.setItem('recordedAudioUrl', audioUrl);
-            setIsDimmed(true);
-            setTimeout(() => router.push('/senior/cook'), 2000);
+            console.log(imageUrl);
+            generateRecipe(
+              {
+                text: transcript || MOCK_TEXT,
+              },
+              {
+                onSuccess: (data) => {
+                  sessionStorage.setItem('recipeResult', data.resultText ?? '');
+                  sessionStorage.setItem('rawTranscript', transcript);
+                  router.push('/senior/cook');
+                },
+              },
+            );
           },
         }}
       />
