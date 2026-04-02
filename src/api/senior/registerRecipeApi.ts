@@ -10,7 +10,7 @@ export interface RegisterRecipeParams {
 export const registerRecipeApi = (data: RegisterRecipeParams) => {
   const token = localStorage.getItem('token');
   return axios
-    .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/recipes`, data, {
+    .post('https://goormthon-4.goorm.training/api/recipes', data, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((res) => res.data);
