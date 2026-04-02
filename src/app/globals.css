@@ -7,9 +7,10 @@ body {
   margin: 0;
 }
 
-@theme {
+:root {
   --color-mandolong-500: #007aff;
   --color-mandolong-600: #1fafff;
+  --color-mandolong-800: #ace4ff;
   --color-mandolong-900: #f3fbff;
 
   --color-gray-050: #282828;
