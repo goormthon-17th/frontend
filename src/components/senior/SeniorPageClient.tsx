@@ -173,6 +173,7 @@ const SeniorPageClient = () => {
                 new Promise((resolve) => setTimeout(resolve, 3000)),
               ]);
               sessionStorage.setItem('recipeResult', data.text ?? '');
+              if (data.audioUrl) sessionStorage.setItem('ttsAudioUrl', data.audioUrl);
               sessionStorage.setItem('rawTranscript', transcript);
               router.push('/senior/cook');
             } finally {

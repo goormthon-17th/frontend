@@ -1,7 +1,5 @@
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { Card, HStack, Text } from '@vapor-ui/core';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 import AudioPlayer from './AudioPlayer';
 
 interface CookCardProps {
@@ -10,15 +8,7 @@ interface CookCardProps {
 }
 
 const CookCard = ({ audioUrl, resultText }: CookCardProps) => {
-  const [ttsUrl, setTtsUrl] = useState<string | null>(null);
-  const audioPlayer = useAudioPlayer(ttsUrl ?? audioUrl);
-
-  useEffect(() => {
-    if (!resultText) return;
-    axios
-      .post('/api/internal/tts', { text: resultText }, { responseType: 'blob' })
-      .then((res) => setTtsUrl(URL.createObjectURL(res.data)));
-  }, [resultText]);
+  const audioPlayer = useAudioPlayer(audioUrl);
 
   return (
     <Card.Root $css={{ width: '350px', padding: '24px 20px', gap: '24px' }}>
