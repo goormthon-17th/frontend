@@ -37,7 +37,8 @@ const CookPageClient = () => {
       >
         <Image src="/icons/back.svg" alt="back" width={28} height={28} />
       </Button>
-      <div style={{ width: '100%', height: '241px', backgroundColor: 'black' }} />
+      {/* <div style={{ width: '100%', height: '241px', backgroundColor: 'black' }} /> */}
+      <Image src="/images/fish_soup.png" alt="fish soup" width={430} height={241} />
       <div
         style={{
           width: '100%',
@@ -46,7 +47,7 @@ const CookPageClient = () => {
         }}
       />
 
-      <div style={{ position: 'absolute', top: '135px', width: '350px' }}>
+      <div style={{ position: 'absolute', top: '200px', width: '350px' }}>
         <CookCard audioUrl={audioUrl} resultText={recipeResult} />
       </div>
 

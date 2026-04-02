@@ -156,7 +156,7 @@ const SeniorStepLayout = ({
             zIndex: 9999,
           }}
         >
-          <Image src="/icons/illust_ai.svg" alt="ai" width={195} height={195} />
+          <Image src="/icons/Illust_ai.svg" alt="ai" width={195} height={195} />
           <Text
             style={{
               fontFamily: 'YPairing',
