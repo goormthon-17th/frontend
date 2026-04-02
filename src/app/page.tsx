@@ -1,11 +1,5 @@
-'use client';
+import { redirect } from 'next/navigation';
 
-import Login from '@/components/login/Login';
-
-export default function Home() {
-  return (
-    <div>
-      <Login />
-    </div>
-  );
+export default function RootPage() {
+  redirect('/login');
 }

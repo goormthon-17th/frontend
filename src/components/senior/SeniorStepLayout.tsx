@@ -84,7 +84,7 @@ const SeniorStepLayout = ({
               fontSize: '20px',
               fontWeight: '700',
               lineHeight: '30px',
-              color: '#4C4C4C',
+              color: 'var(--color-subtitle)',
               textAlign: 'center',
             }}
           >
@@ -116,7 +116,7 @@ const SeniorStepLayout = ({
             height: '64px',
             width: '350px',
             backgroundColor: button.variant === 'outline' ? 'white' : 'var(--color-mandolong-500)',
-            border: button.variant === 'outline' ? '1px solid #C6C6C6' : 'none',
+            border: button.variant === 'outline' ? '1px solid var(--color-nav-border)' : 'none',
             borderRadius: '8px',
             fontSize: '16px',
             fontWeight: '500',
@@ -133,7 +133,7 @@ const SeniorStepLayout = ({
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: '#00000066',
+            backgroundColor: 'var(--color-dim)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',

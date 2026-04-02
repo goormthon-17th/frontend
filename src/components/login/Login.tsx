@@ -63,7 +63,7 @@ const Login = () => {
                   fontSize: '11px',
                   fontWeight: '700',
                   borderRadius: 'none',
-                  borderColor: '#E3E3E3',
+                  borderColor: 'var(--color-nav-border)',
                 }}
               />
             </VStack>
@@ -92,7 +92,7 @@ const Login = () => {
                   fontSize: '11px',
                   fontWeight: '700',
                   borderRadius: 'none',
-                  borderColor: '#E3E3E3',
+                  borderColor: 'var(--color-nav-border)',
                 }}
               />
             </VStack>
