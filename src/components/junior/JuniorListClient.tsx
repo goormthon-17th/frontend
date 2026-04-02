@@ -1,88 +1,29 @@
 'use client';
 
+import { useRecipesByUser } from '@/app/api/junior/useJunior';
 import Header from '@/components/junior/Header';
 import NavBar from '@/components/junior/NavBar';
 import RecipeCard from '@/components/junior/RecipeCard';
 import MobileHeader from '@/components/shared/MobileHeader';
 import { Button, VStack } from '@vapor-ui/core';
-import { useRouter } from 'next/navigation';
-
-const userData = {
-  profile: '/',
-  title: '제주 손맛을 담은 정 많은 할머니',
-  recipe: 6,
-  like: 10,
-  subscribe: 10,
-  recipes: [
-    {
-      id: 1,
-      image: '/card.png',
-      title: '된장찌개',
-      date: '2026.04.01',
-      like: 16,
-      description:
-        '제주 된장으로 끓인 구수한 된장찌개 레시피입니다. 제주 된장으로 끓인 구수한 된장찌개 레시피입니다.',
-    },
-    {
-      id: 2,
-      image: '/card.png',
-      title: '갈치조림',
-      date: '2026.03.28',
-      like: 24,
-      description:
-        '제주 은갈치로 만든 칼칼한 갈치조림 레시피입니다. 제주 은갈치로 만든 칼칼한 갈치조림 레시피입니다.',
-    },
-    {
-      id: 3,
-      image: '/card.png',
-      title: '고사리육개장',
-      date: '2026.03.20',
-      like: 31,
-      description:
-        '제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다. 제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다.',
-    },
-    {
-      id: 4,
-      image: '/card.png',
-      title: '고사리육개장',
-      date: '2026.03.20',
-      like: 31,
-      description:
-        '제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다. 제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다.',
-    },
-    {
-      id: 5,
-      image: '/card.png',
-      title: '고사리육개장',
-      date: '2026.03.20',
-      like: 31,
-      description:
-        '제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다. 제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다.',
-    },
-    {
-      id: 6,
-      image: '/card.png',
-      title: '고사리육개장',
-      date: '2026.03.20',
-      like: 31,
-      description:
-        '제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다. 제주 고사리 듬뿍 넣은 진한 육개장 레시피입니다.',
-    },
-  ],
-};
+import { useParams, useRouter } from 'next/navigation';
 
 const JuniorListClient = () => {
   const router = useRouter();
+  const { id } = useParams();
+  const { data: recipes, isLoading, error } = useRecipesByUser(Number(id));
+
+  console.log(id);
 
   return (
     <VStack style={{ gap: '16px', alignItems: 'center' }}>
       <MobileHeader onBack={() => router.back()} onMenu={() => console.log('메뉴 클릭')} />
       <Header
-        profile={userData.profile}
-        title={userData.title}
-        recipe={userData.recipe}
-        like={userData.like}
-        subscribe={userData.subscribe}
+        profile="/"
+        title="제주 손맛을 담은 정 많은 할머니"
+        recipe={recipes?.length ?? 0}
+        like={0}
+        subscribe={0}
       />
       <div
         style={{
@@ -94,14 +35,17 @@ const JuniorListClient = () => {
           marginBottom: '140px',
         }}
       >
-        {userData.recipes.map((recipe) => (
+        {isLoading && <p>로딩 중...</p>}
+        {error && <p>데이터를 불러오지 못했어요.</p>}
+
+        {recipes?.map((recipe) => (
           <RecipeCard
             key={recipe.id}
-            image={recipe.image}
-            title={recipe.title}
-            date={recipe.date}
-            like={recipe.like}
-            description={recipe.description}
+            image={recipe.image_url ?? '/card.png'}
+            title={recipe.recipe_name}
+            date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
+            like={recipe.like_count}
+            description={recipe.refined_text}
             onCardClick={() => router.push(`/junior/recipe/${recipe.id}`)}
           />
         ))}
