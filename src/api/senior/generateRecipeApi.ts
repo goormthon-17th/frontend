@@ -5,7 +5,7 @@ export const MOCK_TEXT =
 
 export const generateRecipeApi = (data: { text: string }) =>
   axios
-    .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/ai/generate`, {
+    .post('https://goormthon-4.goorm.training/api/ai/generate', {
       text: data.text,
     })
     .then((res) => res.data);
