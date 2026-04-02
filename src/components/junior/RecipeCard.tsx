@@ -1,18 +1,28 @@
 import { HStack, Text, VStack } from '@vapor-ui/core';
 import Image from 'next/image';
 
-interface CardProps {
+interface RecipeCardProps {
   image: string;
   title: string;
   date: string;
   like: number;
   description: string;
   isLiked?: boolean;
+  onCardClick?: () => void;
 }
 
-const Card = ({ image, title, date, like, description, isLiked = false }: CardProps) => {
+const RecipeCard = ({
+  image,
+  title,
+  date,
+  like,
+  description,
+  isLiked = false,
+  onCardClick,
+}: RecipeCardProps) => {
   return (
     <VStack
+      onClick={onCardClick}
       style={{
         borderRadius: '16px',
         overflow: 'hidden',
@@ -61,7 +71,7 @@ const Card = ({ image, title, date, like, description, isLiked = false }: CardPr
             <span
               style={{
                 fontSize: '24px',
-                color: 'var(--color-white)',
+                color: 'var(--color-mandolong-500)',
               }}
             >
               ♥
@@ -85,4 +95,4 @@ const Card = ({ image, title, date, like, description, isLiked = false }: CardPr
   );
 };
 
-export default Card;
+export default RecipeCard;

@@ -1,4 +1,4 @@
-import NavBar from '@/app/junior/components/NavBar';
+import NavBar from '@/components/junior/NavBar';
 import { Button, Text, VStack } from '@vapor-ui/core';
 import Image from 'next/image';
 import { ReactNode } from 'react';

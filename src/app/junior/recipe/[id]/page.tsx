@@ -1,5 +1,7 @@
-const page = () => {
-  return <div>page</div>;
+import JuniorRecipeClient from '@/components/junior/JuniorRecipeClient';
+
+const JuniorRecipePage = ({ params }: { params: { id: string } }) => {
+  return <JuniorRecipeClient params={params} />;
 };
 
-export default page;
+export default JuniorRecipePage;
