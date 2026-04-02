@@ -49,7 +49,7 @@ const WaveformVisualizer = ({ stream }: WaveformVisualizerProps) => {
   }, [stream]);
 
   const groupStyle: React.CSSProperties = {
-    position: 'fixed',
+    position: 'absolute',
     top: '50%',
     transform: 'translateY(-50%)',
     display: 'flex',
