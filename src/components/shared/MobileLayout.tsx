@@ -4,7 +4,7 @@ import { useInnerSize } from '@/utils/useInnerSize';
 import { createContext, ReactNode, useContext } from 'react';
 import { useMeasure } from 'react-use';
 
-export const ScreenContext = createContext<number>(480);
+export const ScreenContext = createContext<number>(390);
 
 export const useMobileContainerWidth = (): number => {
   return useContext(ScreenContext);
@@ -19,7 +19,7 @@ export const MobileContainer = ({ children }: { children: ReactNode }) => {
       <div
         ref={ref}
         style={{
-          maxWidth: '480px',
+          maxWidth: '390px',
           marginLeft: 'auto',
           marginRight: 'auto',
           minHeight: innerHeight > 0 ? innerHeight : '100vh',
