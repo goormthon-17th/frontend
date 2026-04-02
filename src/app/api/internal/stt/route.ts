@@ -22,13 +22,16 @@ export async function POST(request: NextRequest) {
   clovaForm.append('media', media as Blob, 'recording.webm');
   clovaForm.append('params', JSON.stringify(params));
 
-  const response = await fetch(`${invokeUrl}/recognizer/upload`, {
-    method: 'POST',
-    headers: {
-      'X-CLOVASPEECH-API-KEY': secretKey,
+  const response = await fetch(
+    'https://clovaspeech-gw.ncloud.com/external/v1/14971/ba9ae1d0f7785c4b2c4b906de71f2b30a5b390942a7900657eee2aee3e0e3b59/recognizer/upload',
+    {
+      method: 'POST',
+      headers: {
+        'X-CLOVASPEECH-API-KEY': secretKey,
+      },
+      body: clovaForm,
     },
-    body: clovaForm,
-  });
+  );
 
   const data = await response.json();
 
