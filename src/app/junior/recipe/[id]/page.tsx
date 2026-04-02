@@ -1,7 +1,9 @@
 'use client';
 
 import NaverMap from '@/components/junior/NaverMap';
+import AudioPlayer from '@/components/senior/AudioPlayer';
 import MobileHeader from '@/components/shared/MobileHeader';
+import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { HStack, Text, VStack } from '@vapor-ui/core';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -21,6 +23,7 @@ const JuniorRecipePage = ({ params }: { params: { id: string } }) => {
     aiText: `전통 오메기떡은, 음… 그거 막 어렵지 안허고,\n 집에서 허던 거라게, 그냥 단순허우다. 전통 오메기떡은, 음… 그거 막 어렵지 안허고,\n 집에서 허던 거라게, 그냥 단순허우다. 전통 오메기떡은, 음… 그거 막 어렵지 안허고,\n 집에서 허던 거라게, 그냥 단순허우다.`,
     isAiGenerated: true,
     description: `재료\n• 차조(또는 조)\n• 물\n• (선택) 소금 조금\n\n조리방법\n1. 차조를 바로 쓰는 게 아니라, 먼저 물에 3~4시간 정도 불려준다. 그래야 부드러워져서 이후 작업이 쉬워진다.\n2. 불린 차조를 절구에 넣고 계속 찧어준다. 반죽처럼 될 때까지 충분히 찧어야 한다.\n3. 반죽이 되면 손으로 조금씩 떼어 한 입 크기로 동그랗게 빚는다.\n4. 물을 미리 팔팔 끓여 놓은 뒤, 반죽을 넣고 삶는다. 떡이 물 위로 떠오르면 다 익은 것으로 보고 건져낸다.`,
+    audioUrl: null,
   };
 
   const dummyComments = [
@@ -44,8 +47,12 @@ const JuniorRecipePage = ({ params }: { params: { id: string } }) => {
     },
   ];
 
+  const audioPlayer = useAudioPlayer(userData.audioUrl);
+
   return (
-    <VStack style={{ backgroundColor: 'var(--color-white)', minHeight: '100vh' }}>
+    <VStack
+      style={{ backgroundColor: 'var(--color-white)', minHeight: '100vh', paddingBottom: '100px' }}
+    >
       <MobileHeader onBack={() => router.back()} onMenu={() => console.log('메뉴 클릭')} />
       <div
         style={{
@@ -105,7 +112,7 @@ const JuniorRecipePage = ({ params }: { params: { id: string } }) => {
         <hr
           style={{
             width: '100%',
-            border: 'none',
+            border: '0',
             borderTop: '1px solid var(--color-border)',
             marginBottom: '8px',
           }}
@@ -127,7 +134,7 @@ const JuniorRecipePage = ({ params }: { params: { id: string } }) => {
         <hr
           style={{
             width: '100%',
-            border: 'none',
+            border: '0',
             borderTop: '1px solid var(--color-border)',
             margin: '0',
           }}
@@ -142,13 +149,34 @@ const JuniorRecipePage = ({ params }: { params: { id: string } }) => {
         <hr
           style={{
             width: '100%',
-            border: 'none',
+            border: '0',
             borderTop: '1px solid var(--color-border)',
             margin: '0',
           }}
         />
 
         <CommentSection comments={dummyComments} totalCount={4} />
+
+        <div
+          style={{
+            position: 'fixed',
+            bottom: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 10,
+            backgroundColor: 'var(--color-white)',
+            width: '100%',
+            maxWidth: '430px',
+          }}
+        >
+          <AudioPlayer
+            isPlaying={audioPlayer.isPlaying}
+            onToggle={audioPlayer.toggle}
+            currentTime={audioPlayer.currentTime}
+            totalTime={audioPlayer.totalTime}
+            progress={audioPlayer.progress}
+          />
+        </div>
       </VStack>
     </VStack>
   );

@@ -9,6 +9,7 @@ import RecipeCard from '../components/RecipeCard';
 
 const JuniorListPage = () => {
   const router = useRouter();
+
   const userData = {
     profile: '/',
     title: '제주 손맛을 담은 정 많은 할머니',

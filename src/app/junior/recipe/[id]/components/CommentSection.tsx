@@ -80,7 +80,15 @@ const CommentSection = ({ comments, totalCount }: CommentSectionProps) => {
             </HStack>
           </HStack>
 
-          <Text style={{ fontSize: '14px', lineHeight: '1.6', color: 'var(--color-black)' }}>
+          <Text
+            style={{
+              fontSize: '14px',
+              lineHeight: '1.6',
+              color: 'var(--color-black)',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+            }}
+          >
             {comment.content}
           </Text>
 
