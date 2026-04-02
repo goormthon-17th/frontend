@@ -73,7 +73,7 @@ export function useSpeechToText({
       formData.append('media', audioBlob, 'recording.webm');
       formData.append('params', JSON.stringify(params));
 
-      const { data } = await axios.post('/api/stt', formData);
+      const { data } = await axios.post('/api/internal/stt', formData);
       const text: string = data.text ?? '';
       setTranscript(text);
       localStorage.setItem('stt_transcript', text);

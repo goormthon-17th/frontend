@@ -9,7 +9,7 @@ export const useLogin = () => {
     mutationFn: loginApi,
     onSuccess: (data) => {
       localStorage.setItem('token', data.token);
-      router.push('/senior');
+      router.push('/junior');
     },
   });
 };
