@@ -148,6 +148,7 @@ const SeniorStepLayout = ({
             position: 'fixed',
             inset: 0,
             backgroundColor: 'var(--color-dim)',
+            backdropFilter: 'blur(10px)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',

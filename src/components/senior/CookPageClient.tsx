@@ -9,8 +9,9 @@ import { useRouter } from 'next/navigation';
 
 const CookPageClient = () => {
   const router = useRouter();
-  const [audioUrl] = useState<string | null>(() => sessionStorage.getItem('recordedAudioUrl'));
+  const [audioUrl] = useState<string | null>(() => sessionStorage.getItem('ttsAudioUrl'));
   const [recipeResult] = useState<string | null>(() => sessionStorage.getItem('recipeResult'));
+  console.log('recipeResult', recipeResult);
   const [rawTranscript] = useState<string>(() => sessionStorage.getItem('rawTranscript') ?? '');
   const { mutate: registerRecipe, isPending } = useRegisterRecipe();
 
