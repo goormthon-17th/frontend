@@ -3,7 +3,7 @@
 import { Button, Field, Form, TextInput, VStack } from '@vapor-ui/core';
 import Image from 'next/image';
 import { useState } from 'react';
-import { useLogin } from '@/api/login/useLogin';
+import { useLogin } from '@/app/api/login/useLogin';
 
 const Login = () => {
   const [loginId, setLoginId] = useState('');
