@@ -1,3 +1,4 @@
+import NavBar from '@/app/junior/components/NavBar';
 import { Button, Text, VStack } from '@vapor-ui/core';
 import Image from 'next/image';
 import { ReactNode } from 'react';
@@ -6,6 +7,7 @@ interface SeniorStepLayoutProps {
   title: ReactNode;
   subtitle?: string;
   children?: ReactNode;
+  overlay?: ReactNode;
   button?: {
     label: string;
     onClick: () => void;
@@ -20,6 +22,7 @@ const SeniorStepLayout = ({
   title,
   subtitle,
   children,
+  overlay,
   button,
   onBack,
   dim,
@@ -31,7 +34,7 @@ const SeniorStepLayout = ({
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
-        height: '100vh',
+        minHeight: '100dvh',
         justifyContent: 'center',
         alignItems: 'center',
       }}
@@ -59,12 +62,14 @@ const SeniorStepLayout = ({
           position: 'absolute',
           top: '120px',
           zIndex: 10,
+          width: '100%',
+          boxSizing: 'border-box',
         }}
       >
         <Text
           style={{
             fontFamily: 'YPairing',
-            fontSize: '38px',
+            fontSize: '36px',
             fontWeight: '400',
             lineHeight: '56px',
             color: 'black',
@@ -73,7 +78,19 @@ const SeniorStepLayout = ({
         >
           {title}
         </Text>
-        {subtitle && <Text typography="heading5">{subtitle}</Text>}
+        {subtitle && (
+          <Text
+            style={{
+              fontSize: '20px',
+              fontWeight: '700',
+              lineHeight: '30px',
+              color: '#4C4C4C',
+              textAlign: 'center',
+            }}
+          >
+            {subtitle}
+          </Text>
+        )}
       </VStack>
 
       {children && (
@@ -89,13 +106,15 @@ const SeniorStepLayout = ({
         </div>
       )}
 
+      {overlay}
+
       {button && (
         <Button
           style={{
             position: 'absolute',
-            bottom: '32px',
+            bottom: '84px',
             height: '64px',
-            width: '100%',
+            width: '350px',
             backgroundColor: button.variant === 'outline' ? 'white' : 'var(--color-mandolong-500)',
             border: button.variant === 'outline' ? '1px solid #C6C6C6' : 'none',
             borderRadius: '8px',
@@ -120,6 +139,7 @@ const SeniorStepLayout = ({
             alignItems: 'center',
           }}
         >
+          <Image src="/icons/illust_ai.svg" alt="ai" width={195} height={195} />
           <Text
             style={{
               fontFamily: 'YPairing',
@@ -128,12 +148,14 @@ const SeniorStepLayout = ({
               lineHeight: '48px',
               color: 'white',
               textAlign: 'center',
+              whiteSpace: 'pre-line',
             }}
           >
             {dimText}
           </Text>
         </div>
       )}
+      <NavBar />
     </div>
   );
 };
