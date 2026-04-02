@@ -1,15 +1,58 @@
 'use client';
 
-import { useRecipesByUser, useToggleSubscribe, useUserProfile } from '@/app/api/junior/useJunior';
+import {
+  useRecipesByUser,
+  useToggleLike,
+  useToggleSubscribe,
+  useUserProfile,
+} from '@/app/api/junior/useJunior';
 import Header from '@/components/junior/Header';
 import NavBar from '@/components/junior/NavBar';
 import RecipeCard from '@/components/junior/RecipeCard';
 import RecipeCardSkeleton from '@/components/junior/RecipeCardSkeleton';
-import { PROFILE_IMAGES } from '@/constants/text';
-import { useRandomProfile } from '@/hooks/useRandomProfile';
 import { VStack } from '@vapor-ui/core';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
+
+type Recipe = {
+  id: number;
+  recipe_name: string;
+  created_at: { year: number; month: number; day: number };
+  like_count: number;
+  refined_text: string;
+  image_url: string | null;
+};
+
+const RecipeCardWithLike = ({
+  recipe,
+  onCardClick,
+  isBookmarked,
+  onBookmarkClick,
+}: {
+  recipe: Recipe;
+  onCardClick: () => void;
+  isBookmarked: boolean;
+  onBookmarkClick: () => void;
+}) => {
+  const { mutate: toggleLike, data } = useToggleLike(recipe.id);
+  const likeCount = data?.like_count ?? recipe.like_count;
+  const isLiked = data?.liked ?? false;
+
+  return (
+    <RecipeCard
+      image={recipe.image_url ?? '/card.png'}
+      title={recipe.recipe_name}
+      date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
+      like={likeCount}
+      description={recipe.refined_text}
+      isLiked={isLiked}
+      onLikeClick={() => toggleLike(undefined)}
+      onCardClick={onCardClick}
+      isBookmarked={isBookmarked}
+      onBookmarkClick={onBookmarkClick}
+    />
+  );
+};
 
 const JuniorListClient = () => {
   const router = useRouter();
@@ -18,7 +61,6 @@ const JuniorListClient = () => {
 
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<number>>(new Set());
   const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
-  const randomProfile = useRandomProfile(PROFILE_IMAGES);
 
   const { data: userProfile } = useUserProfile(userId);
   const { data: recipes, isLoading, error } = useRecipesByUser(userId);
@@ -43,7 +85,7 @@ const JuniorListClient = () => {
   return (
     <VStack style={{ gap: '16px', alignItems: 'center' }}>
       <Header
-        profile={userProfile?.profile_image_url ?? randomProfile}
+        profile={userProfile?.profile_image_url ?? '/images/profile-1.png'}
         title={userProfile?.nickname ?? ''}
         recipe={userProfile?.recipe_count ?? 0}
         like={userProfile?.recipe_likes_total ?? 0}
@@ -79,13 +121,9 @@ const JuniorListClient = () => {
           </p>
         ) : (
           recipes?.map((recipe) => (
-            <RecipeCard
+            <RecipeCardWithLike
               key={recipe.id}
-              image={recipe.image_url ?? '/card.png'}
-              title={recipe.recipe_name}
-              date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
-              like={recipe.like_count}
-              description={recipe.refined_text}
+              recipe={recipe}
               onCardClick={() => router.push(`/junior/recipe/${recipe.id}`)}
               isBookmarked={bookmarkedIds.has(recipe.id)}
               onBookmarkClick={() => toggleBookmark(recipe.id)}

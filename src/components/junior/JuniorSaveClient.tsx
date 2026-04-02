@@ -1,30 +1,69 @@
 'use client';
 
-import { useRecipesByLatest, useRecipesByLikes } from '@/app/api/junior/useJunior';
+import {
+  useFollowing,
+  useLikedRecipes,
+  useRecipesByLikes,
+  useToggleLike,
+} from '@/app/api/junior/useJunior';
 import Card from '@/components/junior/Card';
 import CardSkeleton from '@/components/junior/CardSkeleton';
 import NavBar from '@/components/junior/NavBar';
 import RecipeCard from '@/components/junior/RecipeCard';
 import RecipeCardSkeleton from '@/components/junior/RecipeCardSkeleton';
 import MobileHeader from '@/components/shared/MobileHeader';
-import { PROFILE_IMAGES } from '@/constants/text';
-import { useRandomProfile } from '@/hooks/useRandomProfile';
 import { Tabs, VStack } from '@vapor-ui/core';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+type Recipe = {
+  id: number;
+  recipe_name: string;
+  created_at: { year: number; month: number; day: number };
+  like_count: number;
+  refined_text: string;
+  image_url: string | null;
+};
+
+const RecipeCardWithLike = ({
+  recipe,
+  onCardClick,
+  initialLiked = false,
+}: {
+  recipe: Recipe;
+  onCardClick: () => void;
+  initialLiked?: boolean;
+}) => {
+  const { mutate: toggleLike, data } = useToggleLike(recipe.id);
+  const [isLiked, setIsLiked] = useState(initialLiked);
+  const likeCount = data?.like_count ?? recipe.like_count;
+
+  return (
+    <RecipeCard
+      image={recipe.image_url ?? '/card.png'}
+      title={recipe.recipe_name}
+      date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
+      like={likeCount}
+      description={recipe.refined_text}
+      isLiked={isLiked}
+      onLikeClick={() => {
+        toggleLike(undefined, {
+          onSuccess: (data) => setIsLiked(data.liked),
+        });
+      }}
+      onCardClick={onCardClick}
+    />
+  );
+};
+
 const JuniorSaveClient = () => {
   const router = useRouter();
-  const [sortOrder, setSortOrder] = useState<'likes' | 'latest'>('likes');
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<number>>(new Set());
-  const randomProfile = useRandomProfile(PROFILE_IMAGES);
 
   const likesQuery = useRecipesByLikes();
-  const latestQuery = useRecipesByLatest();
+  const { data: following, isLoading: isFollowingLoading, error: followingError } = useFollowing();
 
-  // TODO: 저장된 레시피 전용 훅으로 교체 필요 (ex. useBookmarkedRecipes)
-  const { data: savedRecipes, isLoading: isSavedLoading, error: savedError } = likesQuery;
-  const { data: recipes, isLoading, error } = sortOrder === 'likes' ? likesQuery : latestQuery;
+  const { data: savedRecipes, isLoading: isSavedLoading, error: savedError } = useLikedRecipes();
 
   const toggleBookmark = (id: number) => {
     setBookmarkedIds((prev) => {
@@ -58,14 +97,7 @@ const JuniorSaveClient = () => {
           </Tabs.List>
 
           <Tabs.Panel value="tab1">
-            <VStack
-              style={{
-                gap: '16px',
-                alignItems: 'center',
-                width: '100%',
-                marginTop: '24px',
-              }}
-            >
+            <VStack style={{ gap: '16px', alignItems: 'center', width: '100%', marginTop: '24px' }}>
               {savedError && <p>데이터를 불러오지 못했어요.</p>}
 
               {isSavedLoading ? (
@@ -83,16 +115,11 @@ const JuniorSaveClient = () => {
                 </p>
               ) : (
                 savedRecipes?.map((recipe) => (
-                  <RecipeCard
+                  <RecipeCardWithLike
                     key={recipe.id}
-                    image={recipe.image_url ?? '/card.png'}
-                    title={recipe.recipe_name}
-                    date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
-                    like={recipe.like_count}
-                    description={recipe.refined_text}
+                    initialLiked={true}
+                    recipe={recipe}
                     onCardClick={() => router.push(`/junior/recipe/${recipe.id}`)}
-                    isBookmarked={bookmarkedIds.has(recipe.id)}
-                    onBookmarkClick={() => toggleBookmark(recipe.id)}
                   />
                 ))
               )}
@@ -100,28 +127,34 @@ const JuniorSaveClient = () => {
           </Tabs.Panel>
 
           <Tabs.Panel value="tab2">
-            <VStack
-              style={{
-                gap: '16px',
-                alignItems: 'center',
-                marginTop: '24px',
-                width: '100%',
-              }}
-            >
-              {error && <p>데이터를 불러오지 못했어요.</p>}
+            <VStack style={{ gap: '16px', alignItems: 'center', marginTop: '24px', width: '100%' }}>
+              {followingError && <p>데이터를 불러오지 못했어요.</p>}
 
-              {isLoading
-                ? Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={i} />)
-                : recipes?.map((recipe) => (
-                    <Card
-                      key={recipe.id}
-                      image={recipe.image_url ?? '/card.png'}
-                      profile={recipe.profile_image_url ?? randomProfile}
-                      title={recipe.recipe_name}
-                      onCardClick={() => router.push(`/junior/recipe/${recipe.id}`)}
-                      onProfileClick={() => router.push(`/junior/list/${recipe.id}`)}
-                    />
-                  ))}
+              {isFollowingLoading ? (
+                Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={i} />)
+              ) : following?.length === 0 ? (
+                <p
+                  style={{
+                    fontSize: '14px',
+                    color: 'var(--color-gray-600)',
+                    textAlign: 'center',
+                    padding: '40px 0',
+                  }}
+                >
+                  구독중인 할망이 없습니다.
+                </p>
+              ) : (
+                following?.map((user) => (
+                  <Card
+                    key={user.user_id}
+                    image={user.recipe_image_url ?? '/card.png'}
+                    profile={user.profile_image_url ?? '/images/profile-1.png'}
+                    title={user.nickname}
+                    onCardClick={() => router.push(`/junior/list/${user.user_id}`)}
+                    onProfileClick={() => router.push(`/junior/list/${user.user_id}`)}
+                  />
+                ))
+              )}
             </VStack>
           </Tabs.Panel>
         </Tabs.Root>
