@@ -68,7 +68,7 @@ const RecipeCard = ({
             <span
               style={{
                 fontSize: '24px',
-                color: 'var(--color-white)',
+                color: 'var(--color-mandolong-500)',
               }}
             >
               ♥
