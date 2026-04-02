@@ -6,13 +6,27 @@ import NavBar from '@/components/junior/NavBar';
 import RecipeCard from '@/components/junior/RecipeCard';
 import RecipeCardSkeleton from '@/components/junior/RecipeCardSkeleton';
 import MobileHeader from '@/components/shared/MobileHeader';
-import { Button, VStack } from '@vapor-ui/core';
+import { PROFILE_IMAGES } from '@/constants/text';
+import { useRandomProfile } from '@/hooks/useRandomProfile';
+import { VStack } from '@vapor-ui/core';
 import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const JuniorListClient = () => {
   const router = useRouter();
   const { id } = useParams();
+  const [bookmarkedIds, setBookmarkedIds] = useState<Set<number>>(new Set());
+
   const { data: recipes, isLoading, error } = useRecipesByUser(Number(id));
+  const randomProfile = useRandomProfile(PROFILE_IMAGES);
+
+  const toggleBookmark = (id: number) => {
+    setBookmarkedIds((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
 
   const userInfo = recipes?.[0];
 
@@ -20,7 +34,7 @@ const JuniorListClient = () => {
     <VStack style={{ gap: '16px', alignItems: 'center' }}>
       <MobileHeader onBack={() => router.back()} onMenu={() => console.log('메뉴 클릭')} />
       <Header
-        profile={userInfo?.profile_image_url ?? '/card.png'}
+        profile={userInfo?.profile_image_url ?? randomProfile}
         title={userInfo?.nickname ?? ''}
         recipe={userInfo?.recipe_count ?? 0}
         like={userInfo?.recipe_likes_total ?? 0}
@@ -37,39 +51,37 @@ const JuniorListClient = () => {
           marginBottom: '140px',
         }}
       >
-        {isLoading && <p>로딩 중...</p>}
         {error && <p>데이터를 불러오지 못했어요.</p>}
 
-        {isLoading
-          ? Array.from({ length: 3 }).map((_, i) => <RecipeCardSkeleton key={i} />)
-          : recipes?.map((recipe) => (
-              <RecipeCard
-                key={recipe.id}
-                image={recipe.image_url ?? '/card.png'}
-                title={recipe.recipe_name}
-                date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
-                like={recipe.like_count}
-                description={recipe.refined_text}
-                onCardClick={() => router.push(`/junior/recipe/${recipe.id}`)}
-              />
-            ))}
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, i) => <RecipeCardSkeleton key={i} />)
+        ) : recipes?.length === 0 ? (
+          <p
+            style={{
+              fontSize: '14px',
+              color: 'var(--color-gray-600)',
+              textAlign: 'center',
+              padding: '40px 0',
+            }}
+          >
+            작성된 레시피가 없습니다.
+          </p>
+        ) : (
+          recipes?.map((recipe) => (
+            <RecipeCard
+              key={recipe.id}
+              image={recipe.image_url ?? '/card.png'}
+              title={recipe.recipe_name}
+              date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
+              like={recipe.like_count}
+              description={recipe.refined_text}
+              onCardClick={() => router.push(`/junior/recipe/${recipe.id}`)}
+              isBookmarked={bookmarkedIds.has(recipe.id)}
+              onBookmarkClick={() => toggleBookmark(recipe.id)}
+            />
+          ))
+        )}
       </div>
-      <Button
-        style={{
-          fontSize: '16px',
-          fontWeight: 'bold',
-          backgroundColor: 'var(--color-mandolong-500)',
-          borderRadius: '30px',
-          padding: '24px',
-          width: '168px',
-          height: '48px',
-          position: 'fixed',
-          bottom: '76px',
-          zIndex: '10',
-        }}
-      >
-        구독하기
-      </Button>
       <NavBar />
     </VStack>
   );

@@ -94,7 +94,7 @@ const Card = ({
             height={72}
             style={{
               objectFit: 'cover',
-              backgroundColor: 'var(--color-profile-bg)',
+              backgroundColor: 'transparent',
             }}
           />
         </div>

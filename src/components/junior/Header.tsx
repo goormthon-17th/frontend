@@ -37,7 +37,7 @@ const Header = ({ profile, title, recipe, like, subscribe, isLoading }: HeaderPr
           alt="profile"
           width={100}
           height={100}
-          style={{ objectFit: 'cover', backgroundColor: 'var(--color-profile-bg)' }}
+          style={{ objectFit: 'cover', backgroundColor: 'transparent' }}
         />
 
         {isLoading ? (

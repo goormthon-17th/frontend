@@ -42,7 +42,16 @@ const AiText = ({ text, linesToShow = 3 }: AiTextProps) => {
         <Text style={{ fontSize: '14px', color: 'var(--color-black)' }}>
           {isExpanded ? '접기' : '더보기'}
         </Text>
-        <span style={{ fontSize: '16px' }}>♥</span>
+        <img
+          src="/icons/arrow-down.svg"
+          alt={isExpanded ? '접기' : '더보기'}
+          style={{
+            width: '16px',
+            height: '16px',
+            transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.2s ease',
+          }}
+        />
       </div>
     </div>
   );

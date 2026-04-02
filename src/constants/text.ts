@@ -20,3 +20,9 @@ export const LOCATION = [
   { address: '제주 서귀포시 성산읍', lat: 33.4388, lng: 126.9222 },
   { address: '제주 제주시 한경면', lat: 33.3463, lng: 126.1731 },
 ];
+
+export const PROFILE_IMAGES = [
+  '/images/profile-1.png',
+  '/images/profile-2.png',
+  '/images/profile-3.png',
+];

@@ -7,7 +7,8 @@ import CardSkeleton from '@/components/junior/CardSkeleton';
 import NavBar from '@/components/junior/NavBar';
 import MobileHeader from '@/components/shared/MobileHeader';
 import SearchInput from '@/components/shared/SearchInput';
-import { BANNER_TEXT } from '@/constants/text';
+import { BANNER_TEXT, PROFILE_IMAGES } from '@/constants/text';
+import { useRandomProfile } from '@/hooks/useRandomProfile';
 import { Select, VStack } from '@vapor-ui/core';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -16,7 +17,7 @@ const JuniorPage = () => {
   const router = useRouter();
   const [bannerText] = useState(() => BANNER_TEXT[Math.floor(Math.random() * BANNER_TEXT.length)]);
   const [sortOrder, setSortOrder] = useState<'likes' | 'latest'>('likes');
-
+  const randomProfile = useRandomProfile(PROFILE_IMAGES);
   const likesQuery = useRecipesByLikes();
   const latestQuery = useRecipesByLatest();
 
@@ -73,7 +74,7 @@ const JuniorPage = () => {
                 <Card
                   key={recipe.id}
                   image={recipe.image_url ?? '/card.png'}
-                  profile={recipe.profile_image_url ?? '/card.png'}
+                  profile={recipe.profile_image_url ?? randomProfile}
                   recipeName={recipe.nickname}
                   title={recipe.recipe_name}
                   date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
