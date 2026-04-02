@@ -1,5 +1,5 @@
 # Next.js 16 — Jenkins/Kaniko 빌드용 (포트 3000, k8s frontend.yaml 과 맞춤)
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
