@@ -11,7 +11,7 @@ const navItems = [
     icon: '/icons/hambuger.svg',
     activeIcon: '/icons/hambuger_active.svg',
     label: '리스트',
-    href: '/junior/list',
+    href: '/junior',
   },
   {
     id: 2,
@@ -25,7 +25,7 @@ const navItems = [
     icon: '/icons/bookmark.svg',
     activeIcon: '/icons/bookmark_active.svg',
     label: '저장',
-    href: '/junior/recipe',
+    href: '/junior/save',
   },
 ];
 

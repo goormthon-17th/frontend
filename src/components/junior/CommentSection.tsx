@@ -12,6 +12,12 @@ const EMO_LABELS: Record<Exclude<EmoType, null>, string> = {
   emo_3: '사랑',
 };
 
+const EMO_IMAGES: Record<Exclude<EmoType, null>, string> = {
+  emo_1: '/images/emoji-1.png',
+  emo_2: '/images/emoji-2.png',
+  emo_3: '/images/emoji-3.png',
+};
+
 interface Comment {
   id: number;
   nickname: string;
@@ -57,23 +63,28 @@ const CommentSection = ({ comments, totalCount, onSubmit }: CommentSectionProps)
         <Text style={{ fontSize: '14px', fontWeight: '500' }}>{totalCount} 개</Text>
       </HStack>
 
-      <HStack style={{ gap: '8px' }}>
+      {/* 버튼 → 이모지 이미지로 교체 */}
+      <HStack style={{ gap: '12px', alignItems: 'center' }}>
         {(Object.keys(EMO_LABELS) as Exclude<EmoType, null>[]).map((emo) => (
-          <button
+          <div
             key={emo}
             onClick={() => handleEmoClick(emo)}
             style={{
-              padding: '6px 14px',
-              borderRadius: '20px',
-              border: `1px solid ${selectedEmo === emo ? 'var(--color-mandolong-500)' : 'var(--color-border)'}`,
-              backgroundColor: selectedEmo === emo ? 'var(--color-mandolong-500)' : 'transparent',
-              color: selectedEmo === emo ? 'white' : 'var(--color-gray-600)',
-              fontSize: '13px',
               cursor: 'pointer',
+              opacity: selectedEmo === null || selectedEmo === emo ? 1 : 0.3,
+              transition: 'opacity 0.2s',
+              transform: selectedEmo === emo ? 'scale(1.2)' : 'scale(1)',
+              transitionProperty: 'opacity, transform',
             }}
           >
-            {EMO_LABELS[emo]}
-          </button>
+            <Image
+              src={EMO_IMAGES[emo]}
+              alt={EMO_LABELS[emo]}
+              width={36}
+              height={36}
+              style={{ objectFit: 'contain' }}
+            />
+          </div>
         ))}
       </HStack>
 
