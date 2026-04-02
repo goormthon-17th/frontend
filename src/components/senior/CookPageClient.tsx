@@ -1,6 +1,7 @@
 'use client';
 
 import CookCard from '@/components/senior/CookCard';
+import { useRegisterRecipe } from '@/api/senior/useRegisterRecipe';
 import { Button, VStack } from '@vapor-ui/core';
 import { useState } from 'react';
 
@@ -8,6 +9,13 @@ const CookPageClient = () => {
   const [audioUrl] = useState<string | null>(() =>
     typeof window !== 'undefined' ? sessionStorage.getItem('recordedAudioUrl') : null,
   );
+  const [recipeResult] = useState<string | null>(() =>
+    typeof window !== 'undefined' ? sessionStorage.getItem('recipeResult') : null,
+  );
+  const [rawTranscript] = useState<string>(() =>
+    typeof window !== 'undefined' ? (sessionStorage.getItem('rawTranscript') ?? '') : '',
+  );
+  const { mutate: registerRecipe, isPending } = useRegisterRecipe();
 
   return (
     <VStack
@@ -27,10 +35,11 @@ const CookPageClient = () => {
       />
 
       <div style={{ position: 'absolute', top: '135px', width: '350px' }}>
-        <CookCard audioUrl={audioUrl} />
+        <CookCard audioUrl={audioUrl} resultText={recipeResult} />
       </div>
 
       <Button
+        disabled={isPending}
         style={{
           position: 'absolute',
           bottom: '32px',
@@ -42,8 +51,16 @@ const CookPageClient = () => {
           fontWeight: '500',
           color: 'white',
         }}
+        onClick={() =>
+          registerRecipe({
+            raw_text: rawTranscript,
+            refined_text: recipeResult ?? '',
+            audio_url: audioUrl ?? '',
+            image_url: audioUrl ?? '123',
+          })
+        }
       >
-        비법노트 전수하기
+        {isPending ? '전송 중...' : '비법노트 전수하기'}
       </Button>
     </VStack>
   );
