@@ -21,7 +21,7 @@ const JuniorRecipeClient = () => {
   const { mutate: postReview } = usePostReview(Number(id));
 
   const router = useRouter();
-  const audioPlayer = useAudioPlayer(null);
+  const audioPlayer = useAudioPlayer('/record/고성리 2.m4a');
   const [mockLocation] = useState(() => LOCATION[Math.floor(Math.random() * LOCATION.length)]);
 
   if (isLoading)
