@@ -8,6 +8,7 @@ import { useSpeechToText } from '@/hooks/useSpeechToText';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
+import { Button } from '@vapor-ui/core';
 
 type SeniorStep = 'intro' | 'recording' | 'picture' | 'record-complete';
 
@@ -26,22 +27,33 @@ const SeniorPageClient = () => {
         subtitle="오늘 마당에서 딴 톳으로 비법 좀 들려주실래요?"
       >
         <div
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '46px' }}
         >
           <Image
+            style={{ cursor: 'pointer' }}
+            src="/icons/illust_record.svg"
+            alt="recording"
+            height={240}
+            width={240}
+          />
+          <Button
             onClick={() => {
               start();
               setStep('recording');
             }}
-            style={{ cursor: 'pointer' }}
-            src="/icons/illust_record.svg"
-            alt="recording"
-            height={230}
-            width={200}
-          />
-          <span style={{ fontSize: '20px', fontWeight: '500', color: '#767676' }}>
-            마이크를 눌러 녹음을 시작해주세요
-          </span>
+            $css={{
+              fontSize: '18px',
+              fontWeight: '700',
+              height: '48px',
+              width: '177px',
+              backgroundColor: 'var(--color-mandolong-500)',
+              borderRadius: '8px',
+              color: 'white',
+            }}
+          >
+            <Image src="/icons/mic_on_outline.svg" alt="mic on" width={24} height={24} />
+            녹음 시작하기
+          </Button>
         </div>
       </SeniorStepLayout>
     );
@@ -60,24 +72,48 @@ const SeniorPageClient = () => {
             <br />귀 잘 열어 듣고있수다!
           </>
         }
-        subtitle="말씀해주시는 비법 하나하나 잘 저장하고 이수다!"
+        subtitle="말씀해주시는 비법 하나하나 잘 저장하고 있어요"
         overlay={<WaveformVisualizer stream={stream} />}
       >
-        <div
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}
-        >
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Image
-            onClick={() => {
-              stop();
-              setStep('picture');
-            }}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: 'pointer', marginBottom: '46px' }}
             src="/icons/illust_record.svg"
             alt="recording"
             width={240}
             height={240}
           />
-          <span style={{ fontSize: '20px', fontWeight: '500', color: '#767676' }}>녹음 중</span>
+          <Button
+            onClick={() => {
+              stop();
+              setStep('picture');
+            }}
+            $css={{
+              fontSize: '18px',
+              fontWeight: '700',
+              height: '48px',
+              width: '177px',
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              color: 'var(--color-mandolong-500)',
+              border: '1px solid var(--color-mandolong-500)',
+              boxShadow: '$sm',
+              marginBottom: '44px',
+            }}
+          >
+            녹음 완료하기
+          </Button>
+          <Button
+            $css={{
+              fontSize: '16px',
+              fontWeight: '700',
+              backgroundColor: 'white',
+              color: 'var(--color-gray-100)',
+              textDecoration: 'underline',
+            }}
+          >
+            녹음 잠시 중단
+          </Button>
         </div>
       </SeniorStepLayout>
     );
@@ -94,6 +130,7 @@ const SeniorPageClient = () => {
             귀하게 잘 기록었수다!
           </>
         }
+        subtitle="레시피에 맞는 음식 사진을 추가해주세요"
         button={{
           label: '사진 폴더 열기',
           onClick: () => fileInputRef.current?.click(),
@@ -128,7 +165,7 @@ const SeniorPageClient = () => {
           </>
         }
         dim={isPending}
-        dimText={'비법노트\n제작중...'}
+        dimText={'비법노트 제작중...'}
         button={{
           label: '확인',
           onClick: () => {
@@ -148,7 +185,11 @@ const SeniorPageClient = () => {
             );
           },
         }}
-      />
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Image src="/icons/Illust_record_cat.svg" alt="recording cat" width={240} height={240} />
+        </div>
+      </SeniorStepLayout>
     );
   }
 };
