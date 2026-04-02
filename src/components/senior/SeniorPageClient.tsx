@@ -3,27 +3,18 @@
 import SeniorStepLayout from '@/components/senior/SeniorStepLayout';
 import WaveformVisualizer from '@/components/senior/WaveformVisualizer';
 import { useSpeechToText } from '@/hooks/useSpeechToText';
-import { Button } from '@vapor-ui/core';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 type SeniorStep = 'intro' | 'recording' | 'picture' | 'record-complete';
-
-const recordingButtonStyle = {
-  height: '64px',
-  width: '350px',
-  backgroundColor: 'var(--color-mandolong-500)',
-  border: 'none',
-  borderRadius: '8px',
-  fontSize: '16px',
-  fontWeight: '500',
-  color: 'white',
-};
 
 const SeniorPageClient = () => {
   const router = useRouter();
   const [step, setStep] = useState<SeniorStep>('intro');
   const { start, stop, audioUrl, stream } = useSpeechToText({ lang: 'ko-KR' });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDimmed, setIsDimmed] = useState(false);
 
   if (step === 'intro') {
     return (
@@ -31,15 +22,24 @@ const SeniorPageClient = () => {
         title="춘자 삼춘, 혼저 옵서예!"
         subtitle="오늘 마당에서 딴 톳으로 비법 좀 들려주실래요?"
       >
-        <Button
-          style={recordingButtonStyle}
-          onClick={() => {
-            start();
-            setStep('recording');
-          }}
+        <div
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}
         >
-          녹음 시작
-        </Button>
+          <Image
+            onClick={() => {
+              start();
+              setStep('recording');
+            }}
+            style={{ cursor: 'pointer' }}
+            src="/icons/illust_record.svg"
+            alt="recording"
+            height={230}
+            width={200}
+          />
+          <span style={{ fontSize: '20px', fontWeight: '500', color: '#767676' }}>
+            마이크를 눌러 녹음을 시작해주세요
+          </span>
+        </div>
       </SeniorStepLayout>
     );
   }
@@ -58,17 +58,24 @@ const SeniorPageClient = () => {
           </>
         }
         subtitle="말씀해주시는 비법 하나하나 잘 저장하고 이수다!"
+        overlay={<WaveformVisualizer stream={stream} />}
       >
-        <Button
-          style={recordingButtonStyle}
-          onClick={() => {
-            stop();
-            setStep('picture');
-          }}
+        <div
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}
         >
-          녹음 종료
-        </Button>
-        <WaveformVisualizer stream={stream} />
+          <Image
+            onClick={() => {
+              stop();
+              setStep('picture');
+            }}
+            style={{ cursor: 'pointer' }}
+            src="/icons/illust_record.svg"
+            alt="recording"
+            width={240}
+            height={240}
+          />
+          <span style={{ fontSize: '20px', fontWeight: '500', color: '#767676' }}>녹음 중</span>
+        </div>
       </SeniorStepLayout>
     );
   }
@@ -86,10 +93,19 @@ const SeniorPageClient = () => {
         }
         button={{
           label: '사진 폴더 열기',
-          onClick: () => setStep('record-complete'),
+          onClick: () => fileInputRef.current?.click(),
           variant: 'outline',
         }}
-      />
+      >
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+          onChange={() => setStep('record-complete')}
+        />
+        <Image src="/icons/illust_add_pic.svg" alt="add picture" width={240} height={240} />
+      </SeniorStepLayout>
     );
   }
 
@@ -104,11 +120,14 @@ const SeniorPageClient = () => {
             확인해 볼까예?
           </>
         }
+        dim={isDimmed}
+        dimText={'비법노트\n제작중...'}
         button={{
           label: '확인',
           onClick: () => {
             if (audioUrl) sessionStorage.setItem('recordedAudioUrl', audioUrl);
-            router.push('/senior/cook');
+            setIsDimmed(true);
+            setTimeout(() => router.push('/senior/cook'), 2000);
           },
         }}
       />

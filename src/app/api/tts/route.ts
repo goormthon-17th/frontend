@@ -36,33 +36,36 @@ export async function POST(request: NextRequest) {
 
   const { text, voice } = await request.json();
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text }] }],
-        generationConfig: {
-          response_modalities: ['AUDIO'],
-          speech_config: {
-            voice_config: {
-              prebuilt_voice_config: {
-                voice_name: voice ?? 'Kore',
-              },
-            },
+  const body = JSON.stringify({
+    contents: [{ parts: [{ text }] }],
+    generationConfig: {
+      responseModalities: ['AUDIO'],
+      speechConfig: {
+        voiceConfig: {
+          prebuiltVoiceConfig: {
+            voiceName: voice ?? 'Kore',
           },
         },
-      }),
+      },
     },
-  );
+  });
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    return NextResponse.json(error, { status: response.status });
+  let response: Response | null = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-tts:generateContent?key=${apiKey}`,
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body },
+    );
+    if (response.ok) break;
+    const errorData = await response.json().catch(() => ({}));
+    if (errorData?.error?.status !== 'INVALID_ARGUMENT') {
+      return NextResponse.json(errorData, { status: response.status });
+    }
+    if (attempt < 2) await new Promise((r) => setTimeout(r, 500));
+    else return NextResponse.json(errorData, { status: response.status });
   }
 
-  const data = await response.json();
+  const data = await response!.json();
   const pcmBase64 = data?.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
 
   if (!pcmBase64) {

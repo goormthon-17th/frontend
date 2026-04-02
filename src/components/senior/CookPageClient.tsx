@@ -1,7 +1,7 @@
 'use client';
 
 import CookCard from '@/components/senior/CookCard';
-import { Button } from '@vapor-ui/core';
+import { Button, VStack } from '@vapor-ui/core';
 import { useState } from 'react';
 
 const CookPageClient = () => {
@@ -10,12 +10,10 @@ const CookPageClient = () => {
   );
 
   return (
-    <div
+    <VStack
       style={{
         position: 'relative',
         minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
       }}
     >
@@ -47,7 +45,7 @@ const CookPageClient = () => {
       >
         비법노트 전수하기
       </Button>
-    </div>
+    </VStack>
   );
 };
 

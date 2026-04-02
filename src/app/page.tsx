@@ -1,11 +1,5 @@
-'use client';
+import { redirect } from 'next/navigation';
 
-import NaverMap from '@/components/junior/NaverMap';
-
-export default function Home() {
-  return (
-    <div>
-      <NaverMap />
-    </div>
-  );
+export default function RootPage() {
+  redirect('/login');
 }
