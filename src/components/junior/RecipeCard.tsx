@@ -8,7 +8,9 @@ interface RecipeCardProps {
   like: number;
   description: string;
   isLiked?: boolean;
+  isBookmarked?: boolean;
   onCardClick?: () => void;
+  onBookmarkClick?: () => void;
 }
 
 const RecipeCard = ({
@@ -18,7 +20,9 @@ const RecipeCard = ({
   like,
   description,
   isLiked = false,
+  isBookmarked = false,
   onCardClick,
+  onBookmarkClick,
 }: RecipeCardProps) => {
   return (
     <VStack
@@ -27,6 +31,7 @@ const RecipeCard = ({
         borderRadius: '16px',
         overflow: 'hidden',
         width: '100%',
+        cursor: 'pointer',
         height: '220px',
         boxShadow: 'var(--box-shadow-sm)',
       }}
@@ -34,15 +39,18 @@ const RecipeCard = ({
       <div style={{ position: 'relative', flex: 1, width: '100%' }}>
         <Image src={image} alt={title} fill style={{ objectFit: 'cover', width: '100%' }} />
         <button
+          onClick={(e) => {
+            e.stopPropagation(); // 카드 클릭 이벤트 버블링 방지
+            onBookmarkClick?.();
+          }}
           style={{
             position: 'absolute',
             top: '12px',
             right: '12px',
-            width: '40px',
-            height: '40px',
+            width: '32px',
+            height: '32px',
             borderRadius: '50%',
-            backgroundColor: 'var(--color-mandolong-500)',
-            color: 'var(--color-white)',
+            backgroundColor: 'var(--color-white)',
             border: 'none',
             cursor: 'pointer',
             display: 'flex',
@@ -50,7 +58,12 @@ const RecipeCard = ({
             justifyContent: 'center',
           }}
         >
-          ♥
+          <Image
+            src={isBookmarked ? '/icons/filled-bookmark.svg' : '/icons/empty-bookmark.svg'}
+            alt={isBookmarked ? '북마크 해제' : '북마크'}
+            width={16}
+            height={16}
+          />
         </button>
       </div>
 
@@ -68,14 +81,7 @@ const RecipeCard = ({
             <Text style={{ color: 'var(--color-gray-600)', fontSize: '14px' }}>{date}</Text>
           </HStack>
           <HStack style={{ gap: '4px', alignItems: 'center' }}>
-            <span
-              style={{
-                fontSize: '24px',
-                color: 'var(--color-mandolong-500)',
-              }}
-            >
-              ♥
-            </span>
+            <span style={{ fontSize: '24px', color: 'var(--color-mandolong-500)' }}>♥</span>
             <Text style={{ fontWeight: '700', fontSize: '14px' }}>{like}</Text>
           </HStack>
         </HStack>
