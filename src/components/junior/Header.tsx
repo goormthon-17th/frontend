@@ -7,9 +7,10 @@ interface HeaderProps {
   recipe: number;
   like: number;
   subscribe: number;
+  isLoading?: boolean;
 }
 
-const Header = ({ profile, title, recipe, like, subscribe }: HeaderProps) => {
+const Header = ({ profile, title, recipe, like, subscribe, isLoading }: HeaderProps) => {
   return (
     <div style={{ position: 'relative', width: '100%' }}>
       <div
@@ -39,16 +40,23 @@ const Header = ({ profile, title, recipe, like, subscribe }: HeaderProps) => {
           style={{ objectFit: 'cover', backgroundColor: 'var(--color-profile-bg)' }}
         />
 
-        <Text
-          style={{
-            fontFamily: 'YPairing',
-            fontWeight: '700',
-            textAlign: 'center',
-            fontSize: '20px',
-          }}
-        >
-          {title}
-        </Text>
+        {isLoading ? (
+          <div
+            className="skeleton"
+            style={{ width: '100px', height: '24px', borderRadius: '8px' }}
+          />
+        ) : (
+          <Text
+            style={{
+              fontFamily: 'YPairing',
+              fontWeight: '700',
+              textAlign: 'center',
+              fontSize: '20px',
+            }}
+          >
+            {title}
+          </Text>
+        )}
 
         <HStack
           style={{

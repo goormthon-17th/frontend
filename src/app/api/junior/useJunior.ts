@@ -4,10 +4,15 @@ import axios from 'axios';
 type Recipe = {
   id: number;
   recipe_name: string;
+  profile_image_url: string;
+  nickname: string;
   created_at: { year: number; month: number; day: number };
   like_count: number;
   refined_text: string;
   image_url: string | null;
+  following_count: number;
+  recipe_likes_total: number;
+  recipe_count: number;
 };
 
 const BASE = process.env.NEXT_PUBLIC_BACKEND_URL;

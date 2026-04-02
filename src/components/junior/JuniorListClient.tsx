@@ -4,6 +4,7 @@ import { useRecipesByUser } from '@/app/api/junior/useJunior';
 import Header from '@/components/junior/Header';
 import NavBar from '@/components/junior/NavBar';
 import RecipeCard from '@/components/junior/RecipeCard';
+import RecipeCardSkeleton from '@/components/junior/RecipeCardSkeleton';
 import MobileHeader from '@/components/shared/MobileHeader';
 import { Button, VStack } from '@vapor-ui/core';
 import { useParams, useRouter } from 'next/navigation';
@@ -13,17 +14,18 @@ const JuniorListClient = () => {
   const { id } = useParams();
   const { data: recipes, isLoading, error } = useRecipesByUser(Number(id));
 
-  console.log(id);
+  const userInfo = recipes?.[0];
 
   return (
     <VStack style={{ gap: '16px', alignItems: 'center' }}>
       <MobileHeader onBack={() => router.back()} onMenu={() => console.log('메뉴 클릭')} />
       <Header
-        profile="/"
-        title="제주 손맛을 담은 정 많은 할머니"
-        recipe={recipes?.length ?? 0}
-        like={0}
-        subscribe={0}
+        profile={userInfo?.profile_image_url ?? '/card.png'}
+        title={userInfo?.nickname ?? ''}
+        recipe={userInfo?.recipe_count ?? 0}
+        like={userInfo?.recipe_likes_total ?? 0}
+        subscribe={userInfo?.following_count ?? 0}
+        isLoading={isLoading}
       />
       <div
         style={{
@@ -38,17 +40,19 @@ const JuniorListClient = () => {
         {isLoading && <p>로딩 중...</p>}
         {error && <p>데이터를 불러오지 못했어요.</p>}
 
-        {recipes?.map((recipe) => (
-          <RecipeCard
-            key={recipe.id}
-            image={recipe.image_url ?? '/card.png'}
-            title={recipe.recipe_name}
-            date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
-            like={recipe.like_count}
-            description={recipe.refined_text}
-            onCardClick={() => router.push(`/junior/recipe/${recipe.id}`)}
-          />
-        ))}
+        {isLoading
+          ? Array.from({ length: 3 }).map((_, i) => <RecipeCardSkeleton key={i} />)
+          : recipes?.map((recipe) => (
+              <RecipeCard
+                key={recipe.id}
+                image={recipe.image_url ?? '/card.png'}
+                title={recipe.recipe_name}
+                date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
+                like={recipe.like_count}
+                description={recipe.refined_text}
+                onCardClick={() => router.push(`/junior/recipe/${recipe.id}`)}
+              />
+            ))}
       </div>
       <Button
         style={{

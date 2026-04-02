@@ -13,8 +13,8 @@ interface CardProps {
 }
 
 const Card = ({
-  image,
   profile,
+  image,
   title,
   recipeName,
   date,

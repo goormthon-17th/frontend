@@ -6,10 +6,12 @@ import CommentSection from '@/components/junior/CommentSection';
 import NaverMap from '@/components/junior/NaverMap';
 import AudioPlayer from '@/components/senior/AudioPlayer';
 import MobileHeader from '@/components/shared/MobileHeader';
+import { LOCATION } from '@/constants/text';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { HStack, Text, VStack } from '@vapor-ui/core';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const userData = {
   image: '/card.png',
@@ -23,7 +25,7 @@ const userData = {
   audioUrl: null,
 };
 
-const dummyComments = [
+const comments = [
   {
     id: 1,
     nickname: '할머니 손주1',
@@ -47,6 +49,7 @@ const dummyComments = [
 const JuniorRecipeClient = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const audioPlayer = useAudioPlayer(userData.audioUrl);
+  const [mockLocation] = useState(() => LOCATION[Math.floor(Math.random() * LOCATION.length)]);
 
   return (
     <VStack
@@ -92,7 +95,7 @@ const JuniorRecipeClient = ({ params }: { params: { id: string } }) => {
                 cursor: 'pointer',
               }}
             >
-              {userData.location}
+              {mockLocation.address}
             </Text>
           </HStack>
 
@@ -142,7 +145,7 @@ const JuniorRecipeClient = ({ params }: { params: { id: string } }) => {
         <AiText text={userData.aiText} linesToShow={3} />
 
         <div style={{ margin: '8px 0' }}>
-          <NaverMap />
+          <NaverMap lat={mockLocation.lat} lng={mockLocation.lng} />
         </div>
 
         <hr
@@ -154,7 +157,7 @@ const JuniorRecipeClient = ({ params }: { params: { id: string } }) => {
           }}
         />
 
-        <CommentSection comments={dummyComments} totalCount={4} />
+        <CommentSection comments={comments} totalCount={4} />
 
         <div
           style={{
