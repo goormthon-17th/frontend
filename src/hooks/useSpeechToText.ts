@@ -1,6 +1,4 @@
-import axios from 'axios';
 import { useRef, useState } from 'react';
-import { correctJejuDialect, JEJU_BOOSTINGS } from '@/lib/jejuDialect';
 
 interface UseSpeechToTextOptions {
   lang?: 'ko-KR' | 'ja' | 'en-US' | 'zh-CN';
@@ -18,11 +16,7 @@ interface UseSpeechToTextReturn {
   reset: () => void;
 }
 
-export function useSpeechToText({
-  lang = 'ko-KR',
-  onResult,
-  onError,
-}: UseSpeechToTextOptions): UseSpeechToTextReturn {
+export function useSpeechToText({ onError }: UseSpeechToTextOptions): UseSpeechToTextReturn {
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -46,7 +40,7 @@ export function useSpeechToText({
         setStream(null);
         const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm' });
         setAudioUrl(URL.createObjectURL(audioBlob));
-        await sendToClova(audioBlob);
+        // await sendToClova(audioBlob);
       };
 
       mediaRecorder.start();
@@ -67,32 +61,32 @@ export function useSpeechToText({
     setTranscript('');
   };
 
-  const sendToClova = async (audioBlob: Blob) => {
-    try {
-      const invokeUrl = process.env.NEXT_PUBLIC_CLOVA_INVOKE_URL;
-      const secretKey = process.env.NEXT_PUBLIC_CLOVA_SECRET_KEY;
+  // const sendToClova = async (audioBlob: Blob) => {
+  //   try {
+  //     const invokeUrl = process.env.NEXT_PUBLIC_CLOVA_INVOKE_URL;
+  //     const secretKey = process.env.NEXT_PUBLIC_CLOVA_SECRET_KEY;
 
-      const params = {
-        language: lang,
-        completion: 'sync',
-        boostings: JEJU_BOOSTINGS.map((word) => ({ word })),
-      };
-      const formData = new FormData();
-      formData.append('media', audioBlob, 'recording.webm');
-      formData.append('params', JSON.stringify(params));
+  //     const params = {
+  //       language: lang,
+  //       completion: 'sync',
+  //       boostings: JEJU_BOOSTINGS.map((word) => ({ word })),
+  //     };
+  //     const formData = new FormData();
+  //     formData.append('media', audioBlob, 'recording.webm');
+  //     formData.append('params', JSON.stringify(params));
 
-      const { data } = await axios.post(`${invokeUrl}/recognizer/upload`, formData, {
-        headers: { 'X-CLOVASPEECH-API-KEY': secretKey },
-      });
-      const text: string = correctJejuDialect(data.text ?? '');
-      setTranscript(text);
-      localStorage.setItem('stt_transcript', text);
-      onResult?.(text);
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('STT 변환 실패');
-      onError?.(error);
-    }
-  };
+  //     const { data } = await axios.post(`${invokeUrl}/recognizer/upload`, formData, {
+  //       headers: { 'X-CLOVASPEECH-API-KEY': secretKey },
+  //     });
+  //     const text: string = correctJejuDialect(data.text ?? '');
+  //     setTranscript(text);
+  //     localStorage.setItem('stt_transcript', text);
+  //     onResult?.(text);
+  //   } catch (err) {
+  //     const error = err instanceof Error ? err : new Error('STT 변환 실패');
+  //     onError?.(error);
+  //   }
+  // };
 
   return { isRecording, transcript, audioUrl, stream, start, stop, reset };
 }

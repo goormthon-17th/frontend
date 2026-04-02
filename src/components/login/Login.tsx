@@ -4,8 +4,10 @@ import { Button, Field, Form, TextInput, VStack } from '@vapor-ui/core';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useLogin } from '@/app/api/login/useLogin';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
+  const router = useRouter();
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
 
@@ -46,7 +48,7 @@ const Login = () => {
                   width: '350px',
                   fontSize: '11px',
                   fontWeight: '700',
-                  borderRadius: 'none',
+                  borderRadius: '8px',
                   borderColor: 'var(--color-nav-border)',
                 }}
               />
@@ -57,7 +59,7 @@ const Login = () => {
                 fontWeight: '500',
               }}
             >
-              영문 소문자, 숫자 4~16자 조합을 사용해주세요.
+              아이디를 입력해주세요.
             </Field.Description>
           </Field.Root>
           <Field.Root name="password">
@@ -75,7 +77,7 @@ const Login = () => {
                   width: '350px',
                   fontSize: '11px',
                   fontWeight: '700',
-                  borderRadius: 'none',
+                  borderRadius: '8px',
                   borderColor: 'var(--color-nav-border)',
                 }}
               />
@@ -94,6 +96,25 @@ const Login = () => {
               아이디 또는 비밀번호를 확인해주세요.
             </p>
           )}
+          <button
+            style={{
+              position: 'absolute',
+              bottom: '144px',
+              height: '64px',
+              width: '350px',
+              backgroundColor: 'white',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: '500',
+              color: 'var(--color-gray-400)',
+              textDecoration: 'underline',
+            }}
+            onClick={() => {
+              router.push('/junior');
+            }}
+          >
+            비회원 둘러보기
+          </button>
           <Button
             type="submit"
             disabled={isPending}
