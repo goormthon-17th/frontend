@@ -22,7 +22,7 @@ type Recipe = {
   created_at: { year: number; month: number; day: number };
   like_count: number;
   refined_text: string;
-  image_url: string | null;
+  recipe_image_url: string | null;
 };
 
 const RecipeCardWithLike = ({
@@ -40,7 +40,7 @@ const RecipeCardWithLike = ({
 
   return (
     <RecipeCard
-      image={recipe.image_url ?? '/card.png'}
+      image={recipe.recipe_image_url ?? '/card.png'}
       title={recipe.recipe_name}
       date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
       like={likeCount}

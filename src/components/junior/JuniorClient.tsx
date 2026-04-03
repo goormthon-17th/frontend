@@ -10,19 +10,17 @@ import Card from '@/components/junior/Card';
 import CardSkeleton from '@/components/junior/CardSkeleton';
 import NavBar from '@/components/junior/NavBar';
 import SearchInput from '@/components/shared/SearchInput';
-import { BANNER_TEXT, PROFILE_IMAGES } from '@/constants/text';
-import { useRandomProfile } from '@/hooks/useRandomProfile';
+import { BANNER_TEXT } from '@/constants/text';
 import { Select, VStack } from '@vapor-ui/core';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-const JuniorPage = () => {
+const JuniorClient = () => {
   const router = useRouter();
   const [bannerText] = useState(() => BANNER_TEXT[Math.floor(Math.random() * BANNER_TEXT.length)]);
-  const [sortOrder, setSortOrder] = useState<'likes' | 'latest'>('likes');
+  const [sortOrder, setSortOrder] = useState<'좋아요순' | '최신순'>('좋아요순');
   const [searchQuery, setSearchQuery] = useState('');
-  const randomProfile = useRandomProfile(PROFILE_IMAGES);
 
   const likesQuery = useRecipesByLikes();
   const latestQuery = useRecipesByLatest();
@@ -32,7 +30,7 @@ const JuniorPage = () => {
     data: recipes,
     isLoading,
     error,
-  } = searchQuery.trim() ? searchResult : sortOrder === 'likes' ? likesQuery : latestQuery;
+  } = searchQuery.trim() ? searchResult : sortOrder === '좋아요순' ? likesQuery : latestQuery;
 
   return (
     <VStack style={{ position: 'relative', gap: '16px', alignItems: 'center' }}>
@@ -71,8 +69,9 @@ const JuniorPage = () => {
         >
           <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
             <Select.Root
+              value={sortOrder}
               placeholder="좋아요순"
-              onValueChange={(value) => setSortOrder(value as 'likes' | 'latest')}
+              onValueChange={(value) => setSortOrder(value as '좋아요순' | '최신순')}
             >
               <Select.Trigger style={{ boxShadow: 'none' }} />
               <Select.Popup
@@ -80,8 +79,8 @@ const JuniorPage = () => {
                   <Select.PositionerPrimitive side="bottom" style={{ boxShadow: 'none' }} />
                 }
               >
-                <Select.Item value="likes">좋아요순</Select.Item>
-                <Select.Item value="latest">최신순</Select.Item>
+                <Select.Item value="좋아요순">좋아요순</Select.Item>
+                <Select.Item value="최신순">최신순</Select.Item>
               </Select.Popup>
             </Select.Root>
           </div>
@@ -102,7 +101,6 @@ const JuniorPage = () => {
               }}
             >
               <Image src="/images/character-2.png" alt="검색 결과 없음" width={80} height={80} />
-
               <p style={{ fontSize: '16px', fontFamily: 'YPairing' }}>검색 결과가 없어요</p>
             </div>
           ) : (
@@ -116,19 +114,13 @@ const JuniorPage = () => {
                       : recipe.recipe_image_url
                     : '/card.png'
                 }
-                profile={
-                  recipe.profile_image_url
-                    ? recipe.profile_image_url.startsWith('/')
-                      ? `https://goormthon-4.goorm.training${recipe.profile_image_url}`
-                      : recipe.profile_image_url
-                    : randomProfile
-                }
+                profile={`/images/profile-${(recipe.id % 3) + 1}.png`}
                 recipeName={recipe.nickname}
                 title={recipe.recipe_name}
-                date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
+                date={`${recipe.created_at?.month}월 ${recipe.created_at?.day}일`}
                 like={recipe.like_count}
                 onCardClick={() => router.push(`/junior/recipe/${recipe.id}`)}
-                onProfileClick={() => router.push(`/junior/list/${recipe.id}`)}
+                onProfileClick={() => router.push(`/junior/list/${recipe.user_id}`)}
               />
             ))
           )}
@@ -139,4 +131,4 @@ const JuniorPage = () => {
   );
 };
 
-export default JuniorPage;
+export default JuniorClient;
