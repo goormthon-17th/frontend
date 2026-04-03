@@ -5,6 +5,7 @@ import axios from 'axios';
 
 type Recipe = {
   id: number;
+  user_id: number;
   recipe_name: string;
   profile_image_url: string;
   nickname: string;
@@ -148,11 +149,7 @@ export const useFollowing = () => useQuery({ queryKey: ['following'], queryFn: g
 // 유저 프로필
 
 const getUserProfile = (userId: number) =>
-  axios
-    .get(`${BASE}/api/users/${userId}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-    })
-    .then((r) => r.data as UserProfile);
+  axios.get(`${BASE}/api/users/${userId}`).then((r) => r.data as UserProfile);
 
 export const useUserProfile = (userId: number) =>
   useQuery({ queryKey: ['user', userId], queryFn: () => getUserProfile(userId) });
