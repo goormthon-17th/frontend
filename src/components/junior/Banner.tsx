@@ -21,6 +21,7 @@ const Banner = ({ title, children }: BannerProps) => {
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Text
+          suppressHydrationWarning
           style={{
             fontFamily: 'YPairing',
             fontSize: '30px',

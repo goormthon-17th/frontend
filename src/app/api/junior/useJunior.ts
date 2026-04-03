@@ -11,7 +11,7 @@ type Recipe = {
   created_at: { year: number; month: number; day: number };
   like_count: number;
   refined_text: string;
-  image_url: string | null;
+  recipe_image_url: string | null;
   following_count: number;
   recipe_likes_total: number;
   recipe_count: number;

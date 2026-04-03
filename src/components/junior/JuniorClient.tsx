@@ -109,8 +109,20 @@ const JuniorPage = () => {
             recipes?.map((recipe) => (
               <Card
                 key={recipe.id}
-                image={recipe.image_url ?? '/card.png'}
-                profile={recipe.profile_image_url ?? randomProfile}
+                image={
+                  recipe.recipe_image_url
+                    ? recipe.recipe_image_url.startsWith('/')
+                      ? `https://goormthon-4.goorm.training${recipe.recipe_image_url}`
+                      : recipe.recipe_image_url
+                    : '/card.png'
+                }
+                profile={
+                  recipe.profile_image_url
+                    ? recipe.profile_image_url.startsWith('/')
+                      ? `https://goormthon-4.goorm.training${recipe.profile_image_url}`
+                      : recipe.profile_image_url
+                    : randomProfile
+                }
                 recipeName={recipe.nickname}
                 title={recipe.recipe_name}
                 date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
