@@ -7,6 +7,7 @@ interface CardProps {
   title: string;
   recipeName?: string;
   date?: string;
+  user_id?: number;
   like?: number;
   isLiked?: boolean;
   onLikeClick?: () => void;

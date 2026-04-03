@@ -65,7 +65,11 @@ const Header = ({
         }}
       >
         <Image
-          src={profile}
+          src={
+            profile?.startsWith('http') || profile?.startsWith('/')
+              ? profile
+              : '/images/profile-1.png'
+          }
           alt="profile"
           width={100}
           height={100}
