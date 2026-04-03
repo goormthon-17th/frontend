@@ -4,7 +4,7 @@ import { usePostReview, useRecipeDetail, useToggleLike } from '@/app/api/junior/
 import AiText from '@/components/junior/AiText';
 import Badge from '@/components/junior/Badge';
 import CommentSection from '@/components/junior/CommentSection';
-import NaverMap from '@/components/junior/NaverMap';
+// import NaverMap from '@/components/junior/NaverMap';
 import MobileHeader from '@/components/shared/MobileHeader';
 import { LOCATION } from '@/constants/text';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
@@ -192,8 +192,16 @@ const JuniorRecipeClient = () => {
 
         {recipe.raw_text && <AiText text={recipe.raw_text} linesToShow={3} />}
 
-        <div style={{ margin: '8px 0' }}>
-          <NaverMap lat={mockLocation.lat} lng={mockLocation.lng} />
+        <div
+          style={{
+            margin: '8px 0',
+            alignContent: 'center',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          {/* <NaverMap lat={mockLocation.lat} lng={mockLocation.lng} /> */}
+          <Image src="/images/map.png" alt="map" width={350} height={219} />
         </div>
 
         <hr

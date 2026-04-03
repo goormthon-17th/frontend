@@ -123,7 +123,8 @@ const Card = ({
             zIndex: 1,
           }}
         >
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={profile}
             alt="profile"
             width={72}
@@ -131,6 +132,7 @@ const Card = ({
             style={{
               objectFit: 'cover',
               backgroundColor: 'transparent',
+              borderRadius: '50%',
             }}
           />
         </div>
