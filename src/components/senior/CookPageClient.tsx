@@ -13,6 +13,7 @@ const CookPageClient = () => {
   const [recipeResult] = useState<string | null>(() => sessionStorage.getItem('recipeResult'));
   console.log('recipeResult', recipeResult);
   const [rawTranscript] = useState<string>(() => sessionStorage.getItem('rawTranscript') ?? '');
+  const [imageUrl] = useState<string | null>(() => sessionStorage.getItem('imageUrl'));
   const { mutate: registerRecipe, isPending } = useRegisterRecipe();
 
   return (
@@ -38,7 +39,12 @@ const CookPageClient = () => {
         <Image src="/icons/back.svg" alt="back" width={28} height={28} />
       </Button>
       {/* <div style={{ width: '100%', height: '241px', backgroundColor: 'black' }} /> */}
-      <Image src="/images/fish_soup.png" alt="fish soup" width={430} height={241} />
+      <Image
+        src={imageUrl ? `https://goormthon-4.goorm.training${imageUrl}` : '/images/fish_soup.png'}
+        alt="fish soup"
+        width={430}
+        height={241}
+      />
       <div
         style={{
           width: '100%',
@@ -70,7 +76,7 @@ const CookPageClient = () => {
               raw_text: rawTranscript,
               refined_text: recipeResult ?? '',
               audio_url: audioUrl ?? '',
-              image_url: audioUrl ?? '123',
+              image_url: imageUrl ?? '',
             },
             { onSuccess: () => router.push('/junior') },
           )

@@ -3,6 +3,7 @@
 import SeniorStepLayout from '@/components/senior/SeniorStepLayout';
 import WaveformVisualizer from '@/components/senior/WaveformVisualizer';
 import { uploadVoice } from '@/api/senior/uploadVoiceApi';
+import { uploadImage } from '@/api/senior/uploadImageApi';
 import { useSpeechToText } from '@/hooks/useSpeechToText';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -17,6 +18,7 @@ const SeniorPageClient = () => {
   const { start, stop, audioUrl, transcript, stream } = useSpeechToText({ lang: 'ko-KR' });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isPending, setIsPending] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   if (step === 'intro') {
     return (
@@ -140,8 +142,17 @@ const SeniorPageClient = () => {
           type="file"
           accept="image/*"
           style={{ display: 'none' }}
-          onChange={() => {
-            setStep('record-complete');
+          onChange={async (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            setIsPending(true);
+            try {
+              const result = await uploadImage(file);
+              setImageUrl(result.path);
+              setStep('record-complete');
+            } finally {
+              setIsPending(false);
+            }
           }}
         />
         <Image src="/icons/Illust_add_pic.svg" alt="add picture" width={240} height={240} />
@@ -169,12 +180,13 @@ const SeniorPageClient = () => {
             setIsPending(true);
             try {
               const [data] = await Promise.all([
-                uploadVoice(audioUrl),
+                uploadVoice(audioUrl, imageUrl),
                 new Promise((resolve) => setTimeout(resolve, 3000)),
               ]);
               sessionStorage.setItem('recipeResult', data.text ?? '');
               if (data.audioUrl) sessionStorage.setItem('ttsAudioUrl', data.audioUrl);
               sessionStorage.setItem('rawTranscript', transcript);
+              if (imageUrl) sessionStorage.setItem('imageUrl', imageUrl);
               router.push('/senior/cook');
             } finally {
               setIsPending(false);
