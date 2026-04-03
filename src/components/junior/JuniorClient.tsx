@@ -1,6 +1,10 @@
 'use client';
 
-import { useRecipesByLatest, useRecipesByLikes } from '@/app/api/junior/useJunior';
+import {
+  useRecipesByLatest,
+  useRecipesByLikes,
+  useSearchRecipes,
+} from '@/app/api/junior/useJunior';
 import Banner from '@/components/junior/Banner';
 import Card from '@/components/junior/Card';
 import CardSkeleton from '@/components/junior/CardSkeleton';
@@ -17,13 +21,18 @@ const JuniorPage = () => {
   const router = useRouter();
   const [bannerText] = useState(() => BANNER_TEXT[Math.floor(Math.random() * BANNER_TEXT.length)]);
   const [sortOrder, setSortOrder] = useState<'likes' | 'latest'>('likes');
+  const [searchQuery, setSearchQuery] = useState('');
   const randomProfile = useRandomProfile(PROFILE_IMAGES);
+
   const likesQuery = useRecipesByLikes();
   const latestQuery = useRecipesByLatest();
+  const searchResult = useSearchRecipes(searchQuery);
 
-  const { data: recipes, isLoading, error } = sortOrder === 'likes' ? likesQuery : latestQuery;
-
-  console.log(recipes);
+  const {
+    data: recipes,
+    isLoading,
+    error,
+  } = searchQuery.trim() ? searchResult : sortOrder === 'likes' ? likesQuery : latestQuery;
 
   return (
     <VStack style={{ position: 'relative', gap: '16px', alignItems: 'center' }}>
@@ -49,7 +58,7 @@ const JuniorPage = () => {
         }}
       >
         <Banner title={bannerText}>
-          <SearchInput />
+          <SearchInput onSearch={(value) => setSearchQuery(value)} />
         </Banner>
 
         <VStack
@@ -79,21 +88,38 @@ const JuniorPage = () => {
 
           {error && <p>데이터를 불러오지 못했어요.</p>}
 
-          {isLoading
-            ? Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={i} />)
-            : recipes?.map((recipe) => (
-                <Card
-                  key={recipe.id}
-                  image={recipe.image_url ?? '/card.png'}
-                  profile={recipe.profile_image_url ?? randomProfile}
-                  recipeName={recipe.nickname}
-                  title={recipe.recipe_name}
-                  date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
-                  like={recipe.like_count}
-                  onCardClick={() => router.push(`/junior/recipe/${recipe.id}`)}
-                  onProfileClick={() => router.push(`/junior/list/${recipe.id}`)}
-                />
-              ))}
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, i) => <CardSkeleton key={i} />)
+          ) : recipes?.length === 0 ? (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingTop: '100px',
+              }}
+            >
+              <Image src="/images/character-2.png" alt="검색 결과 없음" width={80} height={80} />
+
+              <p style={{ fontSize: '16px', fontFamily: 'YPairing' }}>검색 결과가 없어요</p>
+            </div>
+          ) : (
+            recipes?.map((recipe) => (
+              <Card
+                key={recipe.id}
+                image={recipe.image_url ?? '/card.png'}
+                profile={recipe.profile_image_url ?? randomProfile}
+                recipeName={recipe.nickname}
+                title={recipe.recipe_name}
+                date={`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
+                like={recipe.like_count}
+                onCardClick={() => router.push(`/junior/recipe/${recipe.id}`)}
+                onProfileClick={() => router.push(`/junior/list/${recipe.id}`)}
+              />
+            ))
+          )}
         </VStack>
       </div>
       <NavBar />

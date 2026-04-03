@@ -43,7 +43,7 @@ const NavBar = () => {
         maxWidth: '430px',
         height: '60px',
         backgroundColor: '#ffffff',
-        // borderTop: '1px solid var(--color-nav-border)',
+        border: '1px solid var(--color-nav-border)',
         justifyContent: 'space-around',
         alignItems: 'center',
         zIndex: 100,

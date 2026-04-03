@@ -1,12 +1,21 @@
 import Image from 'next/image';
-import { forwardRef } from 'react';
+import { forwardRef, useRef } from 'react';
 
 interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
+  onSearch?: (value: string) => void;
 }
 
 const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
-  ({ placeholder = '검색어를 입력하세요', className, ...props }, ref) => {
+  ({ placeholder = '검색어를 입력하세요', className, onSearch, ...props }, ref) => {
+    const innerRef = useRef<HTMLInputElement>(null);
+    const inputRef = (ref as React.RefObject<HTMLInputElement>) ?? innerRef;
+
+    const handleSearch = () => {
+      const value = inputRef.current?.value ?? '';
+      onSearch?.(value);
+    };
+
     return (
       <div style={{ position: 'relative', width: '100%', height: '48px' }}>
         <Image
@@ -14,18 +23,22 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           alt="검색"
           width={25}
           height={25}
+          onClick={handleSearch}
           style={{
             position: 'absolute',
             right: '20px',
             top: '50%',
             transform: 'translateY(-50%)',
-            pointerEvents: 'none',
+            cursor: 'pointer',
           }}
         />
         <input
-          ref={ref}
+          ref={inputRef}
           type="text"
           placeholder={placeholder}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSearch();
+          }}
           style={{
             boxSizing: 'border-box',
             border: '1px solid transparent',
