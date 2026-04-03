@@ -124,7 +124,9 @@ const JuniorRecipeClient = () => {
 
           <HStack style={{ gap: '12px', alignItems: 'center' }}>
             <Text style={{ fontSize: '14px', color: 'var(--color-gray-600)' }}>
-              {`${recipe.created_at.month}월 ${recipe.created_at.day}일`}
+              {recipe.created_at
+                ? `${recipe.created_at.month}월 ${recipe.created_at.day}일`
+                : '날짜 정보 없음'}
             </Text>
             <Text style={{ color: 'var(--color-border)' }}>|</Text>
             <HStack style={{ gap: '4px', alignItems: 'center' }}>

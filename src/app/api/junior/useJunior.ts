@@ -192,3 +192,17 @@ const getLikedRecipes = () =>
 
 export const useLikedRecipes = () =>
   useQuery({ queryKey: ['recipes', 'liked'], queryFn: getLikedRecipes });
+
+// 검색 기능
+
+const searchRecipes = (q: string) =>
+  axios
+    .get(`${BASE}/api/recipes/search`, { params: { q } })
+    .then((r) => r.data.recipes as Recipe[]);
+
+export const useSearchRecipes = (q: string) =>
+  useQuery({
+    queryKey: ['recipes', 'search', q],
+    queryFn: () => searchRecipes(q),
+    enabled: q.trim().length > 0,
+  });
