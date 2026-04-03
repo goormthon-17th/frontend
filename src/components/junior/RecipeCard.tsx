@@ -9,6 +9,7 @@ interface RecipeCardProps {
   description: string;
   isLiked?: boolean;
   isBookmarked?: boolean;
+  onLikeClick: () => void;
   onCardClick?: () => void;
   onBookmarkClick?: () => void;
 }
@@ -20,9 +21,8 @@ const RecipeCard = ({
   like,
   description,
   isLiked = false,
-  isBookmarked = false,
+  onLikeClick,
   onCardClick,
-  onBookmarkClick,
 }: RecipeCardProps) => {
   return (
     <VStack
@@ -37,34 +37,12 @@ const RecipeCard = ({
       }}
     >
       <div style={{ position: 'relative', flex: 1, width: '100%' }}>
-        <Image src={image} alt={title} fill style={{ objectFit: 'cover', width: '100%' }} />
-        <button
-          onClick={(e) => {
-            e.stopPropagation(); // 카드 클릭 이벤트 버블링 방지
-            onBookmarkClick?.();
-          }}
-          style={{
-            position: 'absolute',
-            top: '12px',
-            right: '12px',
-            width: '32px',
-            height: '32px',
-            borderRadius: '50%',
-            backgroundColor: 'var(--color-white)',
-            border: 'none',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Image
-            src={isBookmarked ? '/icons/filled-bookmark.svg' : '/icons/empty-bookmark.svg'}
-            alt={isBookmarked ? '북마크 해제' : '북마크'}
-            width={16}
-            height={16}
-          />
-        </button>
+        <Image
+          src={image}
+          alt={title || '레시피 이미지'}
+          fill
+          style={{ objectFit: 'cover', width: '100%' }}
+        />
       </div>
 
       <VStack
@@ -76,12 +54,43 @@ const RecipeCard = ({
       >
         <HStack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
           <HStack style={{ gap: '8px', alignItems: 'center' }}>
-            <Text style={{ fontWeight: '700', fontSize: '18px' }}>{title}</Text>
+            <Text
+              style={{
+                fontWeight: '700',
+                fontSize: '18px',
+                maxWidth: '200px',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {title || '제목 없음'}
+            </Text>
             <Text style={{ color: 'var(--color-border)' }}>|</Text>
             <Text style={{ color: 'var(--color-gray-600)', fontSize: '14px' }}>{date}</Text>
           </HStack>
           <HStack style={{ gap: '4px', alignItems: 'center' }}>
-            <span style={{ fontSize: '24px', color: 'var(--color-mandolong-500)' }}>♥</span>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onLikeClick?.();
+              }}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <Image
+                src={isLiked ? '/icons/filled-heart.svg' : '/icons/empty-heart.svg'}
+                alt={isLiked ? '좋아요 취소' : '좋아요'}
+                width={24}
+                height={24}
+              />
+            </button>
             <Text style={{ fontWeight: '700', fontSize: '14px' }}>{like}</Text>
           </HStack>
         </HStack>

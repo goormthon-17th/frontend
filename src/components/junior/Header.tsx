@@ -8,11 +8,43 @@ interface HeaderProps {
   like: number;
   subscribe: number;
   isLoading?: boolean;
+  isSubscribed?: boolean;
+  onSubscribe?: () => void;
 }
 
-const Header = ({ profile, title, recipe, like, subscribe, isLoading }: HeaderProps) => {
+const Header = ({
+  profile,
+  title,
+  recipe,
+  like,
+  subscribe,
+  isLoading,
+  isSubscribed,
+  onSubscribe,
+}: HeaderProps) => {
   return (
     <div style={{ position: 'relative', width: '100%' }}>
+      <button
+        onClick={onSubscribe}
+        style={{
+          position: 'absolute',
+          right: '20px',
+          top: '80px',
+          zIndex: 10,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px',
+          fontSize: '14px',
+          fontWeight: 'bold',
+          backgroundColor: 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+          color: 'var(--color-mandolong-500)',
+        }}
+      >
+        {isSubscribed ? '구독중' : '구독하기'}
+        {!isSubscribed && <Image src="/icons/plus.svg" alt="구독" width={16} height={16} />}
+      </button>
       <div
         style={{
           position: 'absolute',

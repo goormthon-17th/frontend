@@ -1,5 +1,7 @@
-const page = () => {
-  return <div>page</div>;
+import JuniorSaveClient from '@/components/junior/JuniorSaveClient';
+
+const JuniorSavePage = () => {
+  return <JuniorSaveClient />;
 };
 
-export default page;
+export default JuniorSavePage;
