@@ -1,6 +1,6 @@
 'use client';
 
-import { usePostReview, useRecipeDetail } from '@/app/api/junior/useJunior';
+import { usePostReview, useRecipeDetail, useToggleLike } from '@/app/api/junior/useJunior';
 import AiText from '@/components/junior/AiText';
 import Badge from '@/components/junior/Badge';
 import CommentSection from '@/components/junior/CommentSection';
@@ -19,6 +19,10 @@ const JuniorRecipeClient = () => {
   const { id } = useParams();
   const { data: recipe, isLoading, error } = useRecipeDetail(Number(id));
   const { mutate: postReview } = usePostReview(Number(id));
+  const { mutate: toggleLike, data: likeData } = useToggleLike(Number(id));
+
+  const likeCount = likeData?.like_count ?? recipe?.like_count ?? 0;
+  const isLiked = likeData?.liked ?? false;
 
   const router = useRouter();
   const audioPlayer = useAudioPlayer('/record/고성리 2.m4a');
@@ -50,15 +54,31 @@ const JuniorRecipeClient = () => {
 
   return (
     <VStack
-      style={{ backgroundColor: 'var(--color-white)', minHeight: '100vh', paddingBottom: '150px' }}
+      style={{
+        backgroundColor: 'var(--color-white)',
+        minHeight: '100vh',
+        paddingBottom: '150px',
+        position: 'relative',
+      }}
     >
-      <MobileHeader onBack={() => router.back()} onMenu={() => console.log('메뉴 클릭')} />
+      <Image
+        src="/icons/menu.svg"
+        alt="메뉴"
+        width={24}
+        height={24}
+        style={{
+          position: 'absolute',
+          right: '20px',
+          zIndex: 3,
+          top: '10px',
+        }}
+      />
+      <MobileHeader onBack={() => router.back()} />
       <div
         style={{
           position: 'relative',
           width: '100%',
           height: '240px',
-
           backgroundColor: 'var(--color-gray-800)',
         }}
       >
@@ -108,8 +128,25 @@ const JuniorRecipeClient = () => {
             </Text>
             <Text style={{ color: 'var(--color-border)' }}>|</Text>
             <HStack style={{ gap: '4px', alignItems: 'center' }}>
-              <span style={{ fontSize: '16px' }}>♥</span>
-              <Text style={{ fontSize: '14px', fontWeight: '700' }}>{recipe.like_count}</Text>
+              <button
+                onClick={() => toggleLike(undefined)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <Image
+                  src={isLiked ? '/icons/filled-heart.svg' : '/icons/empty-heart.svg'}
+                  alt={isLiked ? '좋아요 취소' : '좋아요'}
+                  width={20}
+                  height={20}
+                />
+              </button>
+              <Text style={{ fontSize: '14px', fontWeight: '700' }}>{likeCount}</Text>
             </HStack>
           </HStack>
         </HStack>

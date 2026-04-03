@@ -5,9 +5,11 @@ interface CardProps {
   image: string;
   profile: string;
   title: string;
-  recipeName: string;
-  date: string;
-  like: number;
+  recipeName?: string;
+  date?: string;
+  like?: number;
+  isLiked?: boolean;
+  onLikeClick?: () => void;
   onCardClick: () => void;
   onProfileClick: () => void;
 }
@@ -19,7 +21,9 @@ const Card = ({
   recipeName,
   date,
   like,
+  isLiked,
   onCardClick,
+  onLikeClick,
   onProfileClick,
 }: CardProps) => {
   return (
@@ -35,7 +39,7 @@ const Card = ({
       }}
     >
       <div style={{ position: 'relative', width: '100%', height: '180px' }}>
-        <Image src={image} alt={recipeName} fill style={{ objectFit: 'cover' }} />
+        <Image src={image} alt="이미지" fill style={{ objectFit: 'cover' }} />
 
         <div
           style={{
@@ -60,18 +64,50 @@ const Card = ({
           }}
         >
           <HStack style={{ gap: '8px', alignItems: 'center' }}>
-            <Text style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-white)' }}>
+            <Text
+              style={{
+                fontSize: '14px',
+                fontWeight: '700',
+                color: 'var(--color-white)',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                maxWidth: '150px',
+              }}
+            >
               {recipeName}
             </Text>
             <Text style={{ color: 'var(--color-border)' }}>|</Text>
             <Text style={{ fontSize: '14px', color: 'var(--color-white)' }}>{date}</Text>
           </HStack>
-          <HStack style={{ gap: '4px', alignItems: 'center' }}>
-            <span style={{ fontSize: '16px' }}>♥</span>
-            <Text style={{ fontSize: '16px', fontWeight: '700', color: 'var(--color-white)' }}>
-              {like}
-            </Text>
-          </HStack>
+          {isLiked !== undefined && (
+            <HStack style={{ gap: '4px', alignItems: 'center' }}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onLikeClick?.();
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <Image
+                  src={isLiked ? '/icons/filled-heart.svg' : '/icons/empty-heart.svg'}
+                  alt={isLiked ? '좋아요 취소' : '좋아요'}
+                  width={24}
+                  height={24}
+                />
+              </button>
+              <Text style={{ fontSize: '16px', fontWeight: '700', color: 'var(--color-white)' }}>
+                {like}
+              </Text>
+            </HStack>
+          )}
         </HStack>
 
         <div
@@ -112,7 +148,19 @@ const Card = ({
           cursor: 'pointer',
         }}
       >
-        <Text style={{ fontSize: '16px', fontWeight: '700', fontFamily: 'YPairing' }}>{title}</Text>
+        <Text
+          style={{
+            fontSize: '16px',
+            fontWeight: '700',
+            fontFamily: 'YPairing',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            maxWidth: '280px',
+          }}
+        >
+          {title}
+        </Text>
         <span style={{ fontSize: '18px' }}>›</span>
       </HStack>
     </VStack>
