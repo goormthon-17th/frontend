@@ -8,6 +8,7 @@ import CommentSection from '@/components/junior/CommentSection';
 import MobileHeader from '@/components/shared/MobileHeader';
 import { LOCATION } from '@/constants/text';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
+import { markdown } from '@/utils/markdown';
 import { HStack, Text, VStack } from '@vapor-ui/core';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -104,7 +105,7 @@ const JuniorRecipeClient = () => {
         }}
       >
         <Text style={{ fontSize: '24px', fontWeight: '700', fontFamily: 'YPairing' }}>
-          {recipe.recipe_name}
+          {markdown(recipe.recipe_name)}
         </Text>
 
         <HStack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
@@ -165,16 +166,9 @@ const JuniorRecipeClient = () => {
         <Badge />
 
         {recipe.refined_text ? (
-          <Text
-            style={{
-              fontSize: '16px',
-              lineHeight: '1.8',
-              color: 'var(--color-black)',
-              whiteSpace: 'pre-wrap',
-            }}
-          >
-            {recipe.refined_text}
-          </Text>
+          <div style={{ fontSize: '16px', lineHeight: '1.8', color: 'var(--color-black)' }}>
+            {markdown(recipe.refined_text)}
+          </div>
         ) : (
           <Text style={{ fontSize: '14px', color: 'var(--color-gray-600)' }}>
             작성된 글이 없습니다.

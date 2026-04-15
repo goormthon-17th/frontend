@@ -59,7 +59,7 @@ const CommentSection = ({ comments, totalCount, onSubmit }: CommentSectionProps)
   return (
     <VStack style={{ gap: '20px', padding: '20px 0' }}>
       <HStack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-        <Text style={{ fontSize: '16px', fontWeight: '500' }}>댓글</Text>
+        <Text style={{ fontSize: '16px', fontWeight: '700' }}>댓글</Text>
         <Text style={{ fontSize: '14px', fontWeight: '500' }}>{totalCount} 개</Text>
       </HStack>
 
@@ -105,7 +105,7 @@ const CommentSection = ({ comments, totalCount, onSubmit }: CommentSectionProps)
             const prefix = selectedEmo ? `(${EMO_LABELS[selectedEmo]}) ` : '';
             setInput(val.startsWith(prefix) ? val.slice(prefix.length) : val);
           }}
-          placeholder="댓글을 입력하세요"
+          placeholder="이 비법노트 어땠나요?"
           style={{
             flex: 1,
             border: 'none',
