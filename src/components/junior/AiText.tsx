@@ -23,6 +23,7 @@ const AiText = ({ text, linesToShow = 3 }: AiTextProps) => {
           WebkitBoxOrient: 'vertical',
           WebkitLineClamp: isExpanded ? 'unset' : linesToShow,
           overflow: 'hidden',
+          fontWeight: '500',
         }}
       >
         {text}
